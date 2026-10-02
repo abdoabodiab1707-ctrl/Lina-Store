@@ -9,7 +9,7 @@
 <meta name="description" content="Lina Store - متجر منتجات متنوعة وشحن دولي">
 <style>
 :root{--pink:#f45b7a;--dark:#111827;--muted:#6b7280;--bg:#f7f7f8;--white:#fff;--line:#e5e7eb}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:var(--bg);color:var(--dark)}
+*{box-sizing:border-box}body{margin:0;font-family:'Cairo',sans-serif;background:var(--bg);color:var(--dark)}
 button,input,select,textarea{font:inherit}.top{background:#111;color:#fff;text-align:center;padding:9px;font-size:13px}
 header{background:#fff;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line)}
 .nav{max-width:1200px;margin:auto;height:70px;display:flex;align-items:center;gap:22px;padding:0 18px}
@@ -35,7 +35,6 @@ footer{margin-top:50px;background:#111;color:#fff;padding:35px 18px}.foot{max-wi
 .bank-box{background:#f3f4f6;border:1px solid var(--line);padding:12px;border-radius:10px;margin:10px 0;font-size:14px;line-height:1.6}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.heroBox{min-height:310px;padding:28px}.hero h1{font-size:36px}.heroImg{opacity:.45}.nav{gap:9px}.search{order:3;flex-basis:100%}.nav{height:auto;padding:12px;flex-wrap:wrap}.actions{margin-right:auto}.countries{grid-template-columns:repeat(3,1fr)}.foot{grid-template-columns:1fr}}
 @media(max-width:480px){.grid{gap:9px}.pic{height:165px;font-size:65px}.cardBody{padding:10px}.heroText{max-width:100%}.hero p{font-size:15px}.logo{font-size:24px}.countries{grid-template-columns:repeat(2,1fr)}}
-body { font-family: 'Cairo', sans-serif; }
 </style>
 </head>
 <body>
@@ -68,64 +67,185 @@ body { font-family: 'Cairo', sans-serif; }
 <div class="drawer" id="drawer" onclick="if(event.target===this)closeDrawer()"><div class="panel" id="panel"></div></div>
 
 <script>
-let defaultProducts=[
-{id:1,name:"سماعات بلوتوث لاسلكية",cat:"إلكترونيات",price:34.99,emoji:"🎧",supplier:"متجر الأجهزة الذكية",img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80"},
-{id:2,name:"ساعة ذكية",cat:"إلكترونيات",price:49.99,emoji:"⌚",supplier:"وكالة الزمن الحديث",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"},
-{id:3,name:"حقيبة نسائية عصرية",cat:"إكسسوارات",price:59.99,emoji:"👜",supplier:"مؤسسة الأناقة",img:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=80"},
-{id:4,name:"حذاء رياضي",cat:"ملابس وأحذية",price:39.99,emoji:"👟",supplier:"المورد العالمي للرياضة",img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80"},
-{id:5,name:"عطر فاخر",cat:"جمال",price:29.99,emoji:"🧴",supplier:"شركة العطور الشرقية",img:"https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=700&q=80"},
-{id:6,name:"حقيبة ظهر عملية",cat:"إكسسوارات",price:44.99,emoji:"🎒",supplier:"مؤسسة الأناقة",img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80"}
+const defaultProducts = [
+  {id:1, name:"سماعات بلوتوث لاسلكية", cat:"إلكترونيات", price:34.99, emoji:"🎧", supplier:"متجر الأجهزة الذكية", img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80"},
+  {id:2, name:"ساعة ذكية", cat:"إلكترونيات", price:49.99, emoji:"⌚", supplier:"وكالة الزمن الحديث", img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"},
+  {id:3, name:"حقيبة نسائية عصرية", cat:"إكسسوارات", price:59.99, emoji:"👜", supplier:"مؤسسة الأناقة", img:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=80"},
+  {id:4, name:"حذاء رياضي", cat:"ملابس وأحذية", price:39.99, emoji:"👟", supplier:"المورد العالمي للرياضة", img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80"},
+  {id:5, name:"عطر فاخر", cat:"جمال", price:29.99, emoji:"🧴", supplier:"شركة العطور الشرقية", img:"https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=700&q=80"},
+  {id:6, name:"حقيبة ظهر عملية", cat:"إكسسوارات", price:44.99, emoji:"🎒", supplier:"مؤسسة الأناقة", img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80"}
 ];
 
-let products = JSON.parse(localStorage.getItem("linaSupplierProducts") || JSON.stringify(defaultProducts));
+let products = [];
+try {
+  const savedProducts = localStorage.getItem("linaSupplierProducts");
+  products = savedProducts ? JSON.parse(savedProducts) : defaultProducts;
+  if (!Array.isArray(products) || products.length === 0) {
+    products = defaultProducts;
+  }
+} catch (e) {
+  products = defaultProducts;
+}
 
 const countries = {
   USA: {name: "أمريكا", flag: "🇺🇸", currency: "USD", rate: 1, ship: 8},
-  KWT: {name: "الكويت", flag: "🇰🇼", currency: "KWD", rate: .307, ship: 2.5},
+  KWT: {name: "الكويت", flag: "🇰🇼", currency: "KWD", rate: 0.307, ship: 2.5},
   KSA: {name: "السعودية", flag: "🇸🇦", currency: "SAR", rate: 3.75, ship: 25},
   UAE: {name: "الإمارات", flag: "🇦🇪", currency: "AED", rate: 3.67, ship: 25},
   EGY: {name: "مصر", flag: "🇪🇬", currency: "EGP", rate: 50, ship: 100}
 };
 
-let country = localStorage.getItem("linaCountry") || "USA", cat = "الكل", cart = JSON.parse(localStorage.getItem("linaCart") || "[]");
-
-function money(v){let c=countries[country];return new Intl.NumberFormat("en-US",{style:"currency",currency:c.currency,maximumFractionDigits:2}).format(v*c.rate)}
-function save(){
-  localStorage.setItem("linaCart",JSON.stringify(cart));
-  localStorage.setItem("linaCountry",country);
-  document.getElementById("count").textContent=cart.reduce((a,x)=>a+x.qty,0)
+let country = localStorage.getItem("linaCountry") || "USA";
+let cat = "الكل";
+let cart = [];
+try {
+  cart = JSON.parse(localStorage.getItem("linaCart") || "[]");
+} catch (e) {
+  cart = [];
 }
-function renderCountries(){document.getElementById("countries").innerHTML=Object.entries(countries).map(([k,v])=>`<div class="country ${k===country?'active':''}" onclick="setCountry('${k}')"><div class="flag">${v.flag}</div><b>${v.name}</b><small>${v.currency}</small></div>`).join("")}
-function renderCats(){let cats=["الكل",...new Set(products.map(p=>p.cat))];document.getElementById("cats").innerHTML=cats.map(x=>`<button class="cat ${x===cat?'active':''}" onclick="setCat('${x}')">${x}</button>`).join("")}
-function renderProducts(){
- let q=(document.getElementById("search").value||"").trim().toLowerCase();
- let list=products.filter(p=>(cat==="الكل"||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)));
- document.getElementById("resultCount").textContent=list.length+" منتج";
- document.getElementById("grid").innerHTML=list.map(p=>`<article class="card">
- <button class="heart" onclick="this.textContent=this.textContent==='♡'?'♥':'♡'">♡</button>
- <div class="pic">${p.img?`<img src="${p.img}" alt="${p.name}" style="width:100\%;height:100\%;object-fit:cover" onerror="this.outerHTML='<span>${p.emoji}</span>'">`:`<span>${p.emoji}</span>`}</div>
- <div class="cardBody">
-   <h3>${p.name}</h3>
-   <small style="color:#777">${p.cat} | المورد: <b>${p.supplier || 'متجرنا'}</b></small>
-   <div style="margin-top:8px"><span class="price">${money(p.price)}</span></div>
-   <button class="add" onclick="add(${p.id})">أضف إلى السلة</button>
- </div></article>`).join("");
-}
-function setCountry(x){country=x;save();renderCountries();renderProducts();if(document.getElementById("drawer").classList.contains("open"))openCart()}
-function setCat(x){cat=x;renderCats();renderProducts()}
-function add(id){let x=cart.find(a=>a.id===id);x?x.qty++:cart.push({id,qty:1});save();openCart()}
-function change(id,d){let x=cart.find(a=>a.id===id);if(!x)return;x.qty+=d;if(x.qty<=0)cart=cart.filter(a=>a.id!==id);save();openCart()}
-function openCart(){document.getElementById("drawer").classList.add("open");let sub=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0), ship=cart.length?countries[country].ship:0;
-document.getElementById("panel").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><h2>سلة المشتريات</h2><button class="close" onclick="closeDrawer()">×</button></div>
-${cart.length?cart.map(x=>{let p=products.find(p=>p.id===x.id);return `<div class="cartItem"><div class="emoji">${p.emoji}</div><div style="flex:1"><b>${p.name}</b><small style="display:block;color:#777">المورد: ${p.supplier\vert{}\vert{}'متجرنا'}</small><div>${money(p.price)}</div><div class="qty"><button onclick="change(${p.id},-1)">−</button> ${x.qty} <button onclick="change(${p.id},1)">+</button></div></div></div>`}).join(""):`<p style="text-align:center;padding:50px 0;color:#777">السلة فارغة</p>`}
-<div class="summary"><div class="row"><span>المنتجات</span><b>${money(sub)}</b></div><div class="row"><span>الشحن التقديري</span><b>${money(ship)}</b></div><div class="row" style="font-size:20px"><span>الإجمالي</span><b>${money(sub+ship)}</b></div>
-${cart.length?`<button class="cta full" onclick="checkout()">إتمام الطلب</button>`:""}</div>`}
 
-function checkout(){
-  let sub=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0), ship=countries[country].ship;
-  let totalText = money(sub+ship);
+function money(v) {
+  let c = countries[country] || countries["USA"];
+  return new Intl.NumberFormat("en-US", {style: "currency", currency: c.currency, maximumFractionDigits: 2}).format(v * c.rate);
+}
+
+function save() {
+  localStorage.setItem("linaCart", JSON.stringify(cart));
+  localStorage.setItem("linaCountry", country);
+  localStorage.setItem("linaSupplierProducts", JSON.stringify(products));
+  const countEl = document.getElementById("count");
+  if (countEl) {
+    countEl.textContent = cart.reduce((a, x) => a + x.qty, 0);
+  }
+}
+
+function renderCountries() {
+  const container = document.getElementById("countries");
+  if (!container) return;
+  container.innerHTML = Object.entries(countries).map(([k, v]) => 
+    `<div class="country ${k === country ? 'active' : ''}" onclick="setCountry('${k}')"><div class="flag">${v.flag}</div><b>${v.name}</b><small>${v.currency}</small></div>`
+  ).join("");
+}
+
+function renderCats() {
+  const container = document.getElementById("cats");
+  if (!container) return;
+  let cats = ["الكل", ...new Set(products.map(p => p.cat))];
+  container.innerHTML = cats.map(x => 
+    `<button class="cat ${x === cat ? 'active' : ''}" onclick="setCat('${x}')">${x}</button>`
+  ).join("");
+}
+
+function renderProducts() {
+  const searchInput = document.getElementById("search");
+  const resultCount = document.getElementById("resultCount");
+  const grid = document.getElementById("grid");
+  if (!grid) return;
+
+  let q = searchInput ? searchInput.value.trim().toLowerCase() : "";
+  let list = products.filter(p => (cat === "الكل" || p.cat === cat) && (!q || p.name.toLowerCase().includes(q)));
   
-  document.getElementById("panel").innerHTML=`
+  if (resultCount) {
+    resultCount.textContent = list.length + " منتج";
+  }
+
+  grid.innerHTML = list.map(p => `
+    <article class="card">
+      <button class="heart" onclick="this.textContent = this.textContent === '♡' ? '♥' : '♡'">♡</button>
+      <div class="pic">
+        ${p.img ? `<img src="${p.img}" alt="${p.name}" style="width:100\%;height:100\%;object-fit:cover" onerror="this.outerHTML='<span>${p.emoji || '📦'}</span>'">` : `<span>${p.emoji || '📦'}</span>`}
+      </div>
+      <div class="cardBody">
+        <h3>${p.name}</h3>
+        <small style="color:#777">${p.cat} | المورد: <b>${p.supplier || 'متجرنا'}</b></small>
+        <div style="margin-top:8px"><span class="price">${money(p.price)}</span></div>
+        <button class="add" onclick="add(${p.id})">أضف إلى السلة</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function setCountry(x) {
+  country = x;
+  save();
+  renderCountries();
+  renderProducts();
+  if (document.getElementById("drawer").classList.contains("open")) {
+    openCart();
+  }
+}
+
+function setCat(x) {
+  cat = x;
+  renderCats();
+  renderProducts();
+}
+
+function add(id) {
+  let x = cart.find(a => a.id === id);
+  if (x) {
+    x.qty++;
+  } else {
+    cart.push({id, qty: 1});
+  }
+  save();
+  openCart();
+}
+
+function change(id, d) {
+  let x = cart.find(a => a.id === id);
+  if (!x) return;
+  x.qty += d;
+  if (x.qty <= 0) {
+    cart = cart.filter(a => a.id !== id);
+  }
+  save();
+  openCart();
+}
+
+function openCart() {
+  document.getElementById("drawer").classList.add("open");
+  let sub = cart.reduce((s, x) => {
+    let p = products.find(prod => prod.id === x.id);
+    return s + (p ? p.price * x.qty : 0);
+  }, 0);
+  let ship = cart.length ? (countries[country] ? countries[country].ship : 8) : 0;
+
+  document.getElementById("panel").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center"><h2>سلة المشتريات</h2><button class="close" onclick="closeDrawer()">×</button></div>
+    ${cart.length ? cart.map(x => {
+      let p = products.find(prod => prod.id === x.id);
+      if (!p) return "";
+      return `
+        <div class="cartItem">
+          <div class="emoji">${p.emoji || '📦'}</div>
+          <div style="flex:1">
+            <b>${p.name}</b>
+            <small style="display:block;color:#777">المورد: ${p.supplier || 'متجرنا'}</small>
+            <div>${money(p.price)}</div>
+            <div class="qty"><button onclick="change(${p.id}, -1)">−</button> ${x.qty} <button onclick="change(${p.id}, 1)">+</button></div>
+          </div>
+        </div>
+      `;
+    }).join("") : `<p style="text-align:center;padding:50px 0;color:#777">السلة فارغة</p>`}
+    <div class="summary">
+      <div class="row"><span>المنتجات</span><b>${money(sub)}</b></div>
+      <div class="row"><span>الشحن التقديري</span><b>${money(ship)}</b></div>
+      <div class="row" style="font-size:20px"><span>الإجمالي</span><b>${money(sub + ship)}</b></div>
+      ${cart.length ? `<button class="cta full" onclick="checkout()">إتمام الطلب</button>` : ""}
+    </div>
+  `;
+}
+
+function checkout() {
+  let sub = cart.reduce((s, x) => {
+    let p = products.find(prod => prod.id === x.id);
+    return s + (p ? p.price * x.qty : 0);
+  }, 0);
+  let ship = countries[country] ? countries[country].ship : 8;
+  let totalText = money(sub + ship);
+  
+  document.getElementById("panel").innerHTML = `
     <div style="display:flex;justify-content:space-between"><h2>بيانات الطلب والدفع</h2><button class="close" onclick="openCart()">×</button></div>
     <div class="notice">يرجى تحويل المبلغ الإجمالي (${totalText}) إلى حساب إنستا باي الخاص بنا أدناه، ثم إدخال بياناتك ورقم عملية التحويل لتأكيد الطلب.</div>
     
@@ -141,28 +261,34 @@ function checkout(){
       <input id="address" placeholder="عنوان التوصيل بالتفصيل">
       <input id="transId" placeholder="رقم عملية التحويل (Reference Number)">
       <button class="cta full" onclick="placeOrder()">تأكيد وإرسال الطلب</button>
-    </div>`;
+    </div>
+  `;
 }
 
-function placeOrder(){
-  let name = document.getElementById("name").value;
-  if(!name){ alert("يرجى ملء البيانات الأساسية على الأقل"); return; }
+function placeOrder() {
+  let nameField = document.getElementById("name");
+  let name = nameField ? nameField.value.trim() : "";
+  if (!name) {
+    alert("يرجى ملء البيانات الأساسية على الأقل");
+    return;
+  }
   cart = [];
   save();
-  document.getElementById("panel").innerHTML=`
+  document.getElementById("panel").innerHTML = `
     <div style="text-align:center;padding:40px 20px;">
       <div style="font-size:60px;margin-bottom:15px">🎉</div>
       <h2>تم استلام طلبك بنجاح!</h2>
       <p style="color:var(--muted);line-height:1.6">شكراً لك يا ${name}. جاري التحقق من التحويل على حساب إنستا باي باسم Abdalrhman (01062200649) وتجهيز طلبك للشحن.</p>
       <button class="cta full" onclick="closeDrawer();location.reload();">العودة للمتجر</button>
-    </div>`;
+    </div>
+  `;
 }
 
-function openSupplierModal(){
+function openSupplierModal() {
   document.getElementById("drawer").classList.add("open");
-  document.getElementById("panel").innerHTML=`
+  document.getElementById("panel").innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center"><h2>انضم كمورد / شريك</h2><button class="close" onclick="closeDrawer()">×</button></div>
-    <p style="color:var.muted;font-size:14px;line-height:1.6">هل لديك منتجات وترغب في عرضها على متجرنا بنظام العمولة أو الدروبشيبينغ؟ أضف تفاصيل منتجك وسيظهر مباشرة في المتجر:</p>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6">هل لديك منتجات وترغب في عرضها على متجرنا بنظام العمولة أو الدروبشيبينغ؟ أضف تفاصيل منتجك وسيظهر مباشرة في المتجر:</p>
     
     <div class="checkout">
       <input id="supName" placeholder="اسمك أو اسم شركتك / المورد">
@@ -173,17 +299,18 @@ function openSupplierModal(){
       <input id="prodImg" placeholder="رابط صورة المنتج (اختياري)">
       <textarea id="prodDesc" placeholder="تفاصيل إضافية أو وصف المنتج" rows="3"></textarea>
       <button class="cta full" onclick="registerSupplierProduct()">إضافة المنتج وعرضه بالمتجر</button>
-    </div>`;
+    </div>
+  `;
 }
 
-function registerSupplierProduct(){
-  let supName = document.getElementById("supName").value;
-  let prodName = document.getElementById("prodName").value;
-  let prodCat = document.getElementById("prodCat").value || "منوعات";
+function registerSupplierProduct() {
+  let supName = document.getElementById("supName").value.trim();
+  let prodName = document.getElementById("prodName").value.trim();
+  let prodCat = document.getElementById("prodCat").value.trim() || "منوعات";
   let prodPrice = parseFloat(document.getElementById("prodPrice").value) || 20;
-  let prodImg = document.getElementById("prodImg").value;
+  let prodImg = document.getElementById("prodImg").value.trim();
 
-  if(!supName || !prodName){
+  if (!supName || !prodName) {
     alert("يرجى ملء اسم المورد ورقم التواصل واسم المنتج على الأقل");
     return;
   }
@@ -195,11 +322,11 @@ function registerSupplierProduct(){
     price: prodPrice,
     emoji: "📦",
     supplier: supName,
-    img: prodImg || ""
+    img: prodImg
   };
 
   products.push(newProduct);
-  localStorage.setItem("linaSupplierProducts", JSON.stringify(products));
+  save();
   
   closeDrawer();
   renderCats();
@@ -207,10 +334,11 @@ function registerSupplierProduct(){
   alert("تمت إضافة منتجك بنجاح وعرضه للمشتريين على المتجر!");
 }
 
-function closeDrawer(){
+function closeDrawer() {
   document.getElementById("drawer").classList.remove("open");
 }
 
+// التهيئة عند التشغيل
 renderCountries();
 renderCats();
 renderProducts();
