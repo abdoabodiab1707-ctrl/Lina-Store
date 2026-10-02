@@ -72,7 +72,9 @@ USA:{name:"أمريكا",flag:"🇺🇸",currency:"USD",rate:1,ship:8},
 KWT:{name:"الكويت",flag:"🇰🇼",currency:"KWD",rate:.307,ship:2.5},
 KSA:{name:"السعودية",flag:"🇸🇦",currency:"SAR",rate:3.75,ship:25},
 UAE:{name:"الإمارات",flag:"🇦🇪",currency:"AED",rate:3.67,ship:25}
-};
+},
+  EGY: {name: "مصر", flag: "🇪🇬", currency: "EGP", rate: 50, ship: 100},
+
 let country=localStorage.getItem("linaCountry")||"USA", cat="الكل", cart=JSON.parse(localStorage.getItem("linaCart")||"[]");
 
 function money(v){let c=countries[country];return new Intl.NumberFormat("en-US",{style:"currency",currency:c.currency,maximumFractionDigits:2}).format(v*c.rate)}
