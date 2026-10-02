@@ -109,6 +109,4 @@ document.getElementById("panel").innerHTML=`<div style="display:flex;justify-con
 <div class="notice">هذه نسخة تجريبية. لإطلاق المتجر فعليًا سنربط الدفع والشحن ببوابات حقيقية بعد تحديد شركة الشحن وطريقة الدفع.</div>
 <div class="checkout"><input id="name" placeholder="الاسم بالكامل"><input id="phone" placeholder="رقم الهاتف"><input id="email" placeholder="البريد الإلكتروني"><input id="address" placeholder="العنوان بالتفصيل"><select><option>${countries[country].flag} ${countries[country].name}</option></select>
 <button class="cta full" onclick="placeOrder()">تأكيد الطلب — ${money(sub+ship)}</button></div>`}
-function placeOrder(){let n=document.getElementById("name").value,p=document.getElementById("phone").value,a=document.getElementById("address").value;if(!n||!p||!a){alert("من فضلك املأ الاسم والهاتف والعنوان بالتفصيل");return}alert("تم تسجيل الطلب بنجاح.");cart=[];save();closeDrawer()}
-function closeDrawer(){document.getElementById("drawer").classList.remove("open")}
-renderCountries();renderCats();renderProducts();save();
+function placeOrder(){let n=document.getElementById("name").value,p=document.getElementById("phone").value,a=document.getElementById("address").value;if(!n||!p||!a){alert("من فضلك املأ الاسم والهاتف والعنوان بالتفصيل");return}alert("تم تسجيل الطلب بنجاح.");cart=[];save();closeDrawer()}function closeDrawer(){document.getElementById("drawer").classList.remove("open")}renderCountries();renderCats();renderProducts();save();
