@@ -108,7 +108,7 @@ function checkout(){let sub=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).p
 document.getElementById("panel").innerHTML=`<div style="display:flex;justify-content:space-between"><h2>بيانات الطلب</h2><button class="close" onclick="openCart()">×</button></div>
 <div class="notice">هذه نسخة تجريبية. لإطلاق المتجر فعليًا سنربط الدفع والشحن ببوابات حقيقية بعد تحديد شركة الشحن وطريقة الدفع.</div>
 <div class="checkout"><input id="name" placeholder="الاسم بالكامل"><input id="phone" placeholder="رقم الهاتف"><input id="email" placeholder="البريد الإلكتروني"><input id="address" placeholder="العنوان بالتفصيل"><select><option>${countries[country].flag} ${countries[country].name}</option></select>
-<button class="cta full" onclick="placeOrder()">تأكيد الطلب — ${money(sub+ship)}</button></div>`}
+<button class="cta full" onclick="placeOrder()">تأكيد الطلب - $ {money(sub+ship)}</button></div>`}
 function placeOrder(){
   cart = [];
   save();
