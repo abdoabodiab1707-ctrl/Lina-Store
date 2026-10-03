@@ -1,348 +1,226 @@
-<!DOCTYPE html>
+import os, json, zipfile, textwrap, shutil
+
+root="/mnt/data/lina-store-v1"
+if os.path.exists(root):
+    shutil.rmtree(root)
+
+dirs=[
+    "assets/images","assets/icons","css","js","data","api","app"
+]
+for d in dirs:
+    os.makedirs(os.path.join(root,d), exist_ok=True)
+
+files={}
+
+files["index.html"]=r'''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lina Store | متجر لينا</title>
 <meta name="description" content="Lina Store - متجر منتجات متنوعة وشحن دولي">
-<style>
-:root{--pink:#f45b7a;--dark:#111827;--muted:#6b7280;--bg:#f7f7f8;--white:#fff;--line:#e5e7eb}
-*{box-sizing:border-box}body{margin:0;font-family:'Cairo',sans-serif;background:var(--bg);color:var(--dark)}
-button,input,select,textarea{font:inherit}.top{background:#111;color:#fff;text-align:center;padding:9px;font-size:13px}
-header{background:#fff;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line)}
-.nav{max-width:1200px;margin:auto;height:70px;display:flex;align-items:center;gap:22px;padding:0 18px}
-.logo{font-family:Georgia,serif;font-size:29px;font-weight:bold;white-space:nowrap}.logo span{color:var(--pink)}
-.search{flex:1;position:relative}.search input{width:100%;padding:13px 44px 13px 15px;border:1px solid var(--line);border-radius:30px;outline:none}
-.search b{position:absolute;right:17px;top:11px;font-size:20px}
-.actions{display:flex;gap:10px;align-items:center}.iconbtn{border:0;background:#f3f4f6;border-radius:50%;width:42px;height:42px;cursor:pointer;position:relative}
-.badge{position:absolute;background:var(--pink);color:#fff;border-radius:20px;font-size:10px;padding:3px 6px;top:-3px;left:-2px}
-.supplier-btn{background:#e5e7eb;border:0;padding:8px 14px;border-radius:20px;cursor:pointer;font-weight:bold;font-size:13px;transition:.2s}
-.supplier-btn:hover{background:var(--pink);color:#fff}
-.hero{max-width:1200px;margin:18px auto;padding:0 18px}.heroBox{min-height:340px;border-radius:24px;overflow:hidden;display:flex;align-items:center;padding:45px;background:linear-gradient(110deg,#171717,#38333a 52%,#f5b7c3);color:#fff;position:relative}
-.heroText{max-width:520px;position:relative;z-index:2}.hero h1{font-size:48px;margin:0 0 12px}.hero p{font-size:19px;line-height:1.7;color:#eee}.cta{background:var(--pink);border:0;color:#fff;padding:14px 26px;border-radius:28px;font-weight:bold;cursor:pointer}
-.heroImg{position:absolute;left:2%;bottom:-35px;font-size:180px;filter:drop-shadow(0 20px 25px #0006)}
-.countries{max-width:1200px;margin:0 auto 18px;padding:0 18px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.country{background:#fff;border:1px solid var(--line);padding:14px;border-radius:15px;text-align:center;cursor:pointer}.country.active{border:2px solid var(--pink)}
-.country .flag{font-size:30px}.country small{display:block;color:var(--muted);margin-top:4px}
-.wrap{max-width:1200px;margin:auto;padding:0 18px}.sectionHead{display:flex;justify-content:space-between;align-items:center;margin:24px 0 14px}.sectionHead h2{margin:0}.categories{display:flex;gap:10px;overflow:auto;padding-bottom:5px}.cat{background:#fff;border:1px solid var(--line);border-radius:22px;padding:10px 18px;white-space:nowrap;cursor:pointer}.cat.active{background:#111;color:#fff}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;position:relative}.pic{height:220px;background:#eee;display:flex;align-items:center;justify-content:center;font-size:90px}.cardBody{padding:14px}.card h3{margin:0 0 7px;font-size:16px}.price{font-weight:bold;font-size:18px}.old{text-decoration:line-through;color:#999;font-size:12px;margin-right:7px}.add{width:100%;border:0;background:#111;color:#fff;border-radius:12px;padding:11px;margin-top:12px;cursor:pointer}.heart{position:absolute;top:10px;left:10px;background:#fff;border:0;border-radius:50%;width:36px;height:36px;cursor:pointer}
-footer{margin-top:50px;background:#111;color:#fff;padding:35px 18px}.foot{max-width:1200px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.foot p{color:#bbb;line-height:1.7}
-.drawer{position:fixed;inset:0;background:#0007;z-index:50;display:none}.drawer.open{display:block}.panel{position:absolute;right:0;top:0;height:100%;width:min(430px,94vw);background:#fff;padding:22px;overflow:auto}.close{border:0;background:#eee;border-radius:50%;width:36px;height:36px;cursor:pointer}.cartItem{display:flex;gap:10px;border-bottom:1px solid var(--line);padding:14px 0}.cartItem .emoji{font-size:45px;background:#f2f2f2;border-radius:12px;padding:8px}.qty button{border:1px solid var(--line);background:#fff;border-radius:6px;width:27px;height:27px}.summary{margin-top:20px;border-top:1px solid var(--line);padding-top:15px}.row{display:flex;justify-content:space-between;margin:9px 0}.full{width:100%;margin-top:10px}
-.checkout input,.checkout select,.checkout textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;margin:7px 0}
-.notice{background:#fff7ed;border:1px solid #fed7aa;padding:10px;border-radius:10px;font-size:13px;color:#9a3412}
-.bank-box{background:#f3f4f6;border:1px solid var(--line);padding:12px;border-radius:10px;margin:10px 0;font-size:14px;line-height:1.6}
-@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.heroBox{min-height:310px;padding:28px}.hero h1{font-size:36px}.heroImg{opacity:.45}.nav{gap:9px}.search{order:3;flex-basis:100%}.nav{height:auto;padding:12px;flex-wrap:wrap}.actions{margin-right:auto}.countries{grid-template-columns:repeat(3,1fr)}.foot{grid-template-columns:1fr}}
-@media(max-width:480px){.grid{gap:9px}.pic{height:165px;font-size:65px}.cardBody{padding:10px}.heroText{max-width:100%}.hero p{font-size:15px}.logo{font-size:24px}.countries{grid-template-columns:repeat(2,1fr)}}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="top">🌍 شحن دولي وعرض منتجات الموردين بنظام العمولات</div>
-<header><div class="nav">
-  <div class="logo">Lina <span>Store</span></div>
-  <div class="search"><b>⌕</b><input id="search" placeholder="ابحث عن منتج..." oninput="renderProducts()"></div>
-  <div class="actions">
-    <button class="supplier-btn" onclick="openSupplierModal()">🤝 كن مورداً معنا</button>
-    <button class="iconbtn" onclick="openCart()">🛒<span class="badge" id="count">0</span></button>
+<div class="topbar">🌍 شحن دولي • منتجات متنوعة • دعم العملاء</div>
+<header class="header">
+  <div class="nav container">
+    <a class="logo" href="index.html">Lina <span>Store</span></a>
+    <div class="search"><span>⌕</span><input id="searchInput" placeholder="ابحث عن منتج..." autocomplete="off"></div>
+    <div class="nav-actions">
+      <a class="supplier-link" href="app/supplier.html">🤝 كن مورداً</a>
+      <button class="icon-btn" id="cartBtn">🛒<b id="cartCount">0</b></button>
+    </div>
   </div>
-</div></header>
+</header>
 
-<section class="hero"><div class="heroBox">
-  <div class="heroText"><h1>تسوّق وشارك الموردين</h1><p>منتجات متنوعة من شتى الموردين والأسواق بعمولات مرنة. انضم إلينا كمسوق أو مورد وزّع منتجاتك معنا بكل سهولة.</p><button class="cta" onclick="document.getElementById('products').scrollIntoView()">تسوّق الآن</button></div>
-  <div class="heroImg">👜⌚🪑</div>
-</div></section>
+<main>
+<section class="hero container">
+  <div class="hero-box">
+    <div class="hero-copy">
+      <span class="eyebrow">LINA STORE</span>
+      <h1>اكتشف منتجات مميزة من موردين موثوقين</h1>
+      <p>تسوّق منتجات متنوعة بأسعار تنافسية، واختر وجهة الشحن والعملة المناسبة لك.</p>
+      <a class="primary-btn" href="#products">تسوّق الآن</a>
+      <a class="secondary-btn" href="app/supplier.html">انضم كمورد</a>
+    </div>
+    <div class="hero-art">👜⌚🎧</div>
+  </div>
+</section>
 
-<div class="countries" id="countries"></div>
+<section class="container country-section">
+  <div class="section-title"><h2>تسوق حسب الدولة</h2><span id="countryLabel"></span></div>
+  <div id="countries" class="countries"></div>
+</section>
 
-<main class="wrap">
-  <div class="sectionHead"><h2>التصنيفات</h2></div>
-  <div class="categories" id="cats"></div>
-  <div class="sectionHead" id="products"><h2>منتجات مختارة</h2><span id="resultCount"></span></div>
-  <div class="grid" id="grid"></div>
+<section class="container">
+  <div class="section-title"><h2>التصنيفات</h2></div>
+  <div id="categories" class="chips"></div>
+</section>
+
+<section class="container products-section" id="products">
+  <div class="section-title"><h2>منتجات مختارة</h2><span id="resultCount"></span></div>
+  <div id="productGrid" class="product-grid"></div>
+  <div id="emptyState" class="empty hidden">لا توجد منتجات مطابقة لبحثك.</div>
+</section>
+
+<section class="container trust-grid">
+  <div><strong>🔒 دفع آمن</strong><span>طرق دفع يتم تطويرها حسب الدولة</span></div>
+  <div><strong>🚚 شحن دولي</strong><span>خيارات شحن متعددة حسب الوجهة</span></div>
+  <div><strong>💬 دعم العملاء</strong><span>تواصل معنا عند الحاجة</span></div>
+  <div><strong>🤝 موردون</strong><span>فرصة لعرض منتجاتك معنا</span></div>
+</section>
 </main>
 
-<footer><div class="foot"><div><div class="logo">Lina <span>Store</span></div><p>متجر إلكتروني يتيح للموردين عرض بضاعتهم بنظام العمولة والدروبشيبينغ.</p></div><div><b>الدول</b><p>🇺🇸 أمريكا<br>🇰🇼 الكويت<br>🇸🇦 السعودية<br>🇦🇪 الإمارات<br>🇪🇬 مصر</p></div><div><b>خدمة العملاء</b><p>واتساب: أضف رقمك هنا<br>البريد: أضف بريدك هنا</p></div></div></footer>
+<footer>
+  <div class="container footer-grid">
+    <div><div class="logo">Lina <span>Store</span></div><p>متجر إلكتروني للمنتجات المتنوعة، مع منصة مستقبلية للموردين والمسوقين.</p></div>
+    <div><h3>روابط</h3><a href="index.html">الرئيسية</a><a href="app/supplier.html">كن مورداً</a><a href="app/cart.html">السلة</a></div>
+    <div><h3>الدعم</h3><p>WhatsApp: أضف رقمك لاحقاً</p><p>Email: أضف بريدك لاحقاً</p></div>
+  </div>
+  <div class="copyright">© 2026 Lina Store — جميع الحقوق محفوظة</div>
+</footer>
 
-<div class="drawer" id="drawer" onclick="if(event.target===this)closeDrawer()"><div class="panel" id="panel"></div></div>
-
-<script>
-const defaultProducts = [
-  {id:1, name:"سماعات بلوتوث لاسلكية", cat:"إلكترونيات", price:34.99, emoji:"🎧", supplier:"متجر الأجهزة الذكية", img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80"},
-  {id:2, name:"ساعة ذكية", cat:"إلكترونيات", price:49.99, emoji:"⌚", supplier:"وكالة الزمن الحديث", img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"},
-  {id:3, name:"حقيبة نسائية عصرية", cat:"إكسسوارات", price:59.99, emoji:"👜", supplier:"مؤسسة الأناقة", img:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=80"},
-  {id:4, name:"حذاء رياضي", cat:"ملابس وأحذية", price:39.99, emoji:"👟", supplier:"المورد العالمي للرياضة", img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80"},
-  {id:5, name:"عطر فاخر", cat:"جمال", price:29.99, emoji:"🧴", supplier:"شركة العطور الشرقية", img:"https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=700&q=80"},
-  {id:6, name:"حقيبة ظهر عملية", cat:"إكسسوارات", price:44.99, emoji:"🎒", supplier:"مؤسسة الأناقة", img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80"}
-];
-
-let products = [];
-try {
-  const savedProducts = localStorage.getItem("linaSupplierProducts");
-  products = savedProducts ? JSON.parse(savedProducts) : defaultProducts;
-  if (!Array.isArray(products) || products.length === 0) {
-    products = defaultProducts;
-  }
-} catch (e) {
-  products = defaultProducts;
-}
-
-const countries = {
-  USA: {name: "أمريكا", flag: "🇺🇸", currency: "USD", rate: 1, ship: 8},
-  KWT: {name: "الكويت", flag: "🇰🇼", currency: "KWD", rate: 0.307, ship: 2.5},
-  KSA: {name: "السعودية", flag: "🇸🇦", currency: "SAR", rate: 3.75, ship: 25},
-  UAE: {name: "الإمارات", flag: "🇦🇪", currency: "AED", rate: 3.67, ship: 25},
-  EGY: {name: "مصر", flag: "🇪🇬", currency: "EGP", rate: 50, ship: 100}
-};
-
-let country = localStorage.getItem("linaCountry") || "USA";
-let cat = "الكل";
-let cart = [];
-try {
-  cart = JSON.parse(localStorage.getItem("linaCart") || "[]");
-} catch (e) {
-  cart = [];
-}
-
-function money(v) {
-  let c = countries[country] || countries["USA"];
-  return new Intl.NumberFormat("en-US", {style: "currency", currency: c.currency, maximumFractionDigits: 2}).format(v * c.rate);
-}
-
-function save() {
-  localStorage.setItem("linaCart", JSON.stringify(cart));
-  localStorage.setItem("linaCountry", country);
-  localStorage.setItem("linaSupplierProducts", JSON.stringify(products));
-  const countEl = document.getElementById("count");
-  if (countEl) {
-    countEl.textContent = cart.reduce((a, x) => a + x.qty, 0);
-  }
-}
-
-function renderCountries() {
-  const container = document.getElementById("countries");
-  if (!container) return;
-  container.innerHTML = Object.entries(countries).map(([k, v]) => 
-    `<div class="country ${k === country ? 'active' : ''}" onclick="setCountry('${k}')"><div class="flag">${v.flag}</div><b>${v.name}</b><small>${v.currency}</small></div>`
-  ).join("");
-}
-
-function renderCats() {
-  const container = document.getElementById("cats");
-  if (!container) return;
-  let cats = ["الكل", ...new Set(products.map(p => p.cat))];
-  container.innerHTML = cats.map(x => 
-    `<button class="cat ${x === cat ? 'active' : ''}" onclick="setCat('${x}')">${x}</button>`
-  ).join("");
-}
-
-function renderProducts() {
-  const searchInput = document.getElementById("search");
-  const resultCount = document.getElementById("resultCount");
-  const grid = document.getElementById("grid");
-  if (!grid) return;
-
-  let q = searchInput ? searchInput.value.trim().toLowerCase() : "";
-  let list = products.filter(p => (cat === "الكل" || p.cat === cat) && (!q || p.name.toLowerCase().includes(q)));
-  
-  if (resultCount) {
-    resultCount.textContent = list.length + " منتج";
-  }
-
-  grid.innerHTML = list.map(p => `
-    <article class="card">
-      <button class="heart" onclick="this.textContent = this.textContent === '♡' ? '♥' : '♡'">♡</button>
-      <div class="pic">
-        ${p.img ? `<img src="${p.img}" alt="${p.name}" style="width:100\%;height:100\%;object-fit:cover" onerror="this.outerHTML='<span>${p.emoji || '📦'}</span>'">` : `<span>${p.emoji || '📦'}</span>`}
-      </div>
-      <div class="cardBody">
-        <h3>${p.name}</h3>
-        <small style="color:#777">${p.cat} | المورد: <b>${p.supplier || 'متجرنا'}</b></small>
-        <div style="margin-top:8px"><span class="price">${money(p.price)}</span></div>
-        <button class="add" onclick="add(${p.id})">أضف إلى السلة</button>
-      </div>
-    </article>
-  `).join("");
-}
-
-function setCountry(x) {
-  country = x;
-  save();
-  renderCountries();
-  renderProducts();
-  if (document.getElementById("drawer").classList.contains("open")) {
-    openCart();
-  }
-}
-
-function setCat(x) {
-  cat = x;
-  renderCats();
-  renderProducts();
-}
-
-function add(id) {
-  let x = cart.find(a => a.id === id);
-  if (x) {
-    x.qty++;
-  } else {
-    cart.push({id, qty: 1});
-  }
-  save();
-  openCart();
-}
-
-function change(id, d) {
-  let x = cart.find(a => a.id === id);
-  if (!x) return;
-  x.qty += d;
-  if (x.qty <= 0) {
-    cart = cart.filter(a => a.id !== id);
-  }
-  save();
-  openCart();
-}
-
-function openCart() {
-  document.getElementById("drawer").classList.add("open");
-  let sub = cart.reduce((s, x) => {
-    let p = products.find(prod => prod.id === x.id);
-    return s + (p ? p.price * x.qty : 0);
-  }, 0);
-  let ship = cart.length ? (countries[country] ? countries[country].ship : 8) : 0;
-
-  document.getElementById("panel").innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center"><h2>سلة المشتريات</h2><button class="close" onclick="closeDrawer()">×</button></div>
-    ${cart.length ? cart.map(x => {
-      let p = products.find(prod => prod.id === x.id);
-      if (!p) return "";
-      return `
-        <div class="cartItem">
-          <div class="emoji">${p.emoji || '📦'}</div>
-          <div style="flex:1">
-            <b>${p.name}</b>
-            <small style="display:block;color:#777">المورد: ${p.supplier || 'متجرنا'}</small>
-            <div>${money(p.price)}</div>
-            <div class="qty"><button onclick="change(${p.id}, -1)">−</button> ${x.qty} <button onclick="change(${p.id}, 1)">+</button></div>
-          </div>
-        </div>
-      `;
-    }).join("") : `<p style="text-align:center;padding:50px 0;color:#777">السلة فارغة</p>`}
-    <div class="summary">
-      <div class="row"><span>المنتجات</span><b>${money(sub)}</b></div>
-      <div class="row"><span>الشحن التقديري</span><b>${money(ship)}</b></div>
-      <div class="row" style="font-size:20px"><span>الإجمالي</span><b>${money(sub + ship)}</b></div>
-      ${cart.length ? `<button class="cta full" onclick="checkout()">إتمام الطلب</button>` : ""}
-    </div>
-  `;
-}
-
-function checkout() {
-  let sub = cart.reduce((s, x) => {
-    let p = products.find(prod => prod.id === x.id);
-    return s + (p ? p.price * x.qty : 0);
-  }, 0);
-  let ship = countries[country] ? countries[country].ship : 8;
-  let totalText = money(sub + ship);
-  
-  document.getElementById("panel").innerHTML = `
-    <div style="display:flex;justify-content:space-between"><h2>بيانات الطلب والدفع</h2><button class="close" onclick="openCart()">×</button></div>
-    <div class="notice">يرجى تحويل المبلغ الإجمالي (${totalText}) إلى حساب إنستا باي الخاص بنا أدناه، ثم إدخال بياناتك ورقم عملية التحويل لتأكيد الطلب.</div>
-    
-    <div class="bank-box">
-      <b>💳 بيانات التحويل المالي (انستا باي):</b><br>
-      • رقم إنستا باي: <b style="color:var(--pink)">01062200649</b><br>
-      • اسم المستفيد: <b>Abdalrhman</b>
-    </div>
-
-    <div class="checkout">
-      <input id="name" placeholder="الاسم بالكامل">
-      <input id="phone" placeholder="رقم الهاتف">
-      <input id="address" placeholder="عنوان التوصيل بالتفصيل">
-      <input id="transId" placeholder="رقم عملية التحويل (Reference Number)">
-      <button class="cta full" onclick="placeOrder()">تأكيد وإرسال الطلب</button>
-    </div>
-  `;
-}
-
-function placeOrder() {
-  let nameField = document.getElementById("name");
-  let name = nameField ? nameField.value.trim() : "";
-  if (!name) {
-    alert("يرجى ملء البيانات الأساسية على الأقل");
-    return;
-  }
-  cart = [];
-  save();
-  document.getElementById("panel").innerHTML = `
-    <div style="text-align:center;padding:40px 20px;">
-      <div style="font-size:60px;margin-bottom:15px">🎉</div>
-      <h2>تم استلام طلبك بنجاح!</h2>
-      <p style="color:var(--muted);line-height:1.6">شكراً لك يا ${name}. جاري التحقق من التحويل على حساب إنستا باي باسم Abdalrhman (01062200649) وتجهيز طلبك للشحن.</p>
-      <button class="cta full" onclick="closeDrawer();location.reload();">العودة للمتجر</button>
-    </div>
-  `;
-}
-
-function openSupplierModal() {
-  document.getElementById("drawer").classList.add("open");
-  document.getElementById("panel").innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center"><h2>انضم كمورد / شريك</h2><button class="close" onclick="closeDrawer()">×</button></div>
-    <p style="color:var(--muted);font-size:14px;line-height:1.6">هل لديك منتجات وترغب في عرضها على متجرنا بنظام العمولة أو الدروبشيبينغ؟ أضف تفاصيل منتجك وسيظهر مباشرة في المتجر:</p>
-    
-    <div class="checkout">
-      <input id="supName" placeholder="اسمك أو اسم شركتك / المورد">
-      <input id="supPhone" placeholder="رقم التواصل (واتساب)">
-      <input id="prodName" placeholder="اسم المنتج">
-      <input id="prodCat" placeholder="التصنيف (مثال: إلكترونيات، جمال...)">
-      <input id="prodPrice" type="number" placeholder="السعر بالدولار (مثال: 25.00)">
-      <input id="prodImg" placeholder="رابط صورة المنتج (اختياري)">
-      <textarea id="prodDesc" placeholder="تفاصيل إضافية أو وصف المنتج" rows="3"></textarea>
-      <button class="cta full" onclick="registerSupplierProduct()">إضافة المنتج وعرضه بالمتجر</button>
-    </div>
-  `;
-}
-
-function registerSupplierProduct() {
-  let supName = document.getElementById("supName").value.trim();
-  let prodName = document.getElementById("prodName").value.trim();
-  let prodCat = document.getElementById("prodCat").value.trim() || "منوعات";
-  let prodPrice = parseFloat(document.getElementById("prodPrice").value) || 20;
-  let prodImg = document.getElementById("prodImg").value.trim();
-
-  if (!supName || !prodName) {
-    alert("يرجى ملء اسم المورد ورقم التواصل واسم المنتج على الأقل");
-    return;
-  }
-
-  let newProduct = {
-    id: Date.now(),
-    name: prodName,
-    cat: prodCat,
-    price: prodPrice,
-    emoji: "📦",
-    supplier: supName,
-    img: prodImg
-  };
-
-  products.push(newProduct);
-  save();
-  
-  closeDrawer();
-  renderCats();
-  renderProducts();
-  alert("تمت إضافة منتجك بنجاح وعرضه للمشتريين على المتجر!");
-}
-
-function closeDrawer() {
-  document.getElementById("drawer").classList.remove("open");
-}
-
-// التهيئة عند التشغيل
-renderCountries();
-renderCats();
-renderProducts();
-save();
-</script>
+<div id="toast" class="toast"></div>
+<script type="module" src="js/app.js"></script>
 </body>
-</html>
+</html>'''
+
+files["product.html"]=r'''<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>منتج | Lina Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="topbar">🌍 شحن دولي • Lina Store</div>
+<header class="header"><div class="nav container"><a class="logo" href="index.html">Lina <span>Store</span></a><div class="nav-actions"><a class="supplier-link" href="app/supplier.html">🤝 كن مورداً</a><a class="icon-btn cart-link" href="app/cart.html">🛒<b id="cartCount">0</b></a></div></div></header>
+<main class="container product-page" id="productPage"></main>
+<footer><div class="copyright">© 2026 Lina Store</div></footer>
+<script type="module" src="js/product.js"></script>
+</body>
+</html>'''
+
+files["app/cart.html"]=r'''<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>السلة | Lina Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header"><div class="nav container"><a class="logo" href="../index.html">Lina <span>Store</span></a><a class="back-link" href="../index.html">← متابعة التسوق</a></div></header>
+<main class="container page"><h1>سلة المشتريات</h1><div id="cartPage"></div></main>
+<script type="module" src="../js/cart.js"></script>
+</body>
+</html>'''
+
+files["app/checkout.html"]=r'''<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>إتمام الطلب | Lina Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header"><div class="nav container"><a class="logo" href="../index.html">Lina <span>Store</span></a></div></header>
+<main class="container page"><div id="checkoutPage"></div></main>
+<script type="module" src="../js/checkout.js"></script>
+</body>
+</html>'''
+
+files["app/supplier.html"]=r'''<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>كن مورداً | Lina Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header"><div class="nav container"><a class="logo" href="../index.html">Lina <span>Store</span></a></div></header>
+<main class="container page supplier-page">
+<div class="supplier-hero"><span class="eyebrow">PARTNER WITH LINA</span><h1>اعرض منتجاتك أمام عملاء جدد</h1><p>أرسل بياناتك ومنتجاتك للمراجعة. في النسخة الإنتاجية سيتم اعتماد المنتجات من لوحة الإدارة قبل نشرها.</p></div>
+<form id="supplierForm" class="form-card">
+<h2>بيانات المورد والمنتج</h2>
+<input id="supplierName" required placeholder="اسمك أو اسم الشركة">
+<input id="supplierPhone" required placeholder="رقم التواصل / WhatsApp">
+<input id="productName" required placeholder="اسم المنتج">
+<input id="category" placeholder="التصنيف">
+<input id="price" required type="number" min="0" step="0.01" placeholder="سعر المورد بالدولار">
+<input id="image" type="url" placeholder="رابط صورة المنتج">
+<textarea id="description" rows="5" placeholder="وصف المنتج ومعلومات إضافية"></textarea>
+<button class="primary-btn" type="submit">إرسال المنتج للمراجعة</button>
+<div id="supplierMessage"></div>
+</form>
+</main>
+<script type="module" src="../js/supplier.js"></script>
+</body>
+</html>'''
+
+files["app/admin.html"]=r'''<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin | Lina Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header"><div class="nav container"><a class="logo" href="../index.html">Lina <span>Store</span></a></div></header>
+<main class="container page"><h1>لوحة الإدارة — نسخة تجريبية</h1><div class="notice">هذه الواجهة محلية فقط في v1. لا تستخدمها لإدارة بيانات حقيقية قبل إضافة Backend وتسجيل دخول آمن.</div><div id="adminContent"></div></main>
+<script type="module" src="../js/admin.js"></script>
+</body>
+</html>'''
+
+files["data/products.json"]=json.dumps([
+ {"id":1,"name":"سماعات بلوتوث لاسلكية","cat":"إلكترونيات","price":34.99,"supplier":"متجر الأجهزة الذكية","emoji":"🎧","img":"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80","description":"سماعات لاسلكية للاستخدام اليومي."},
+ {"id":2,"name":"ساعة ذكية","cat":"إلكترونيات","price":49.99,"supplier":"وكالة الزمن الحديث","emoji":"⌚","img":"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80","description":"ساعة ذكية بتصميم عصري."},
+ {"id":3,"name":"حقيبة نسائية عصرية","cat":"إكسسوارات","price":59.99,"supplier":"مؤسسة الأناقة","emoji":"👜","img":"https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80","description":"حقيبة عملية وأنيقة."},
+ {"id":4,"name":"حذاء رياضي","cat":"ملابس وأحذية","price":39.99,"supplier":"المورد العالمي للرياضة","emoji":"👟","img":"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80","description":"حذاء رياضي للاستخدام اليومي."},
+ {"id":5,"name":"عطر فاخر","cat":"جمال","price":29.99,"supplier":"شركة العطور الشرقية","emoji":"🧴","img":"https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80","description":"عطر بتصميم أنيق ورائحة مميزة."},
+ {"id":6,"name":"حقيبة ظهر عملية","cat":"إكسسوارات","price":44.99,"supplier":"مؤسسة الأناقة","emoji":"🎒","img":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80","description":"حقيبة ظهر مناسبة للاستخدام اليومي."}
+],ensure_ascii=False,indent=2)
+
+files["css/style.css"]=r''':root{--pink:#f45b7a;--dark:#111827;--muted:#6b7280;--bg:#f7f7f8;--white:#fff;--line:#e5e7eb;--green:#16803c}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Cairo,Arial,sans-serif;background:var(--bg);color:var(--dark)}a{text-decoration:none;color:inherit}button,input,textarea,select{font:inherit}.container{max-width:1200px;margin:auto;padding:0 18px}.topbar{background:#111;color:#fff;text-align:center;padding:9px;font-size:13px}.header{background:#fff;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line)}.nav{min-height:70px;display:flex;align-items:center;gap:20px}.logo{font-family:Georgia,serif;font-size:29px;font-weight:800;white-space:nowrap}.logo span{color:var(--pink)}.search{flex:1;position:relative}.search span{position:absolute;right:16px;top:8px;font-size:22px}.search input{width:100%;padding:13px 45px 13px 15px;border:1px solid var(--line);border-radius:30px;outline:none}.nav-actions{display:flex;gap:10px;align-items:center}.supplier-link,.secondary-btn{background:#eef0f2;border:0;padding:9px 14px;border-radius:22px;font-weight:700}.icon-btn{border:0;background:#f3f4f6;border-radius:50%;width:44px;height:44px;cursor:pointer;position:relative}.icon-btn b{position:absolute;background:var(--pink);color:#fff;border-radius:20px;font-size:10px;padding:3px 6px;top:-3px;left:-2px}.hero{margin-top:18px}.hero-box{min-height:360px;border-radius:26px;overflow:hidden;display:flex;align-items:center;padding:48px;background:linear-gradient(110deg,#171717,#38333a 52%,#f5b7c3);color:#fff;position:relative}.hero-copy{max-width:650px;position:relative;z-index:2}.eyebrow{font-size:12px;letter-spacing:2px;font-weight:800;color:var(--pink)}.hero h1{font-size:45px;line-height:1.2;margin:12px 0}.hero p{font-size:18px;line-height:1.8;color:#eee}.hero-art{position:absolute;left:4%;bottom:-35px;font-size:150px;filter:drop-shadow(0 20px 25px #0006);opacity:.9}.primary-btn{display:inline-block;background:var(--pink);border:0;color:#fff;padding:13px 25px;border-radius:28px;font-weight:800;cursor:pointer;margin-top:8px}.secondary-btn{display:inline-block;margin-right:8px;cursor:pointer}.country-section{margin-top:22px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:25px 0 14px}.section-title h2{margin:0}.countries{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.country{background:#fff;border:1px solid var(--line);padding:13px;border-radius:15px;text-align:center;cursor:pointer}.country.active{border:2px solid var(--pink)}.country .flag{font-size:29px}.country small{display:block;color:var(--muted);margin-top:4px}.chips{display:flex;gap:10px;overflow:auto;padding-bottom:6px}.chip{background:#fff;border:1px solid var(--line);border-radius:22px;padding:9px 18px;white-space:nowrap;cursor:pointer}.chip.active{background:#111;color:#fff}.products-section{margin-top:5px}.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;position:relative;transition:.2s}.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px #1111}.pic{height:220px;background:#eee;display:flex;align-items:center;justify-content:center;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.card-body{padding:14px}.card h3{margin:0 0 7px;font-size:16px}.price{font-weight:800;font-size:18px}.supplier{color:#777;font-size:12px}.add{width:100%;border:0;background:#111;color:#fff;border-radius:12px;padding:11px;margin-top:12px;cursor:pointer}.empty{text-align:center;background:#fff;padding:50px;border-radius:18px}.hidden{display:none}.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:35px}.trust-grid>div{background:#fff;border:1px solid var(--line);padding:18px;border-radius:15px}.trust-grid strong,.trust-grid span{display:block}.trust-grid span{color:var(--muted);font-size:13px;margin-top:5px}footer{margin-top:55px;background:#111;color:#fff}.footer-grid{padding-top:35px;padding-bottom:25px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footer-grid p{color:#bbb;line-height:1.8}.footer-grid h3{margin-top:0}.footer-grid a{display:block;color:#ccc;margin:7px 0}.copyright{text-align:center;border-top:1px solid #333;padding:15px;color:#aaa;font-size:13px}.toast{position:fixed;bottom:22px;left:22px;background:#111;color:#fff;padding:12px 18px;border-radius:10px;opacity:0;transform:translateY(10px);transition:.25s;z-index:99}.toast.show{opacity:1;transform:translateY(0)}.page{padding-top:35px;min-height:70vh}.cart-layout{display:grid;grid-template-columns:2fr 1fr;gap:20px}.cart-list,.summary-card,.form-card,.product-info,.product-gallery{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.cart-row{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}.cart-row img{width:80px;height:80px;object-fit:cover;border-radius:12px}.qty{display:flex;gap:7px;align-items:center}.qty button{width:30px;height:30px;border:1px solid var(--line);background:#fff;border-radius:7px}.summary-card{height:max-content}.summary-line{display:flex;justify-content:space-between;margin:12px 0}.notice{background:#fff7ed;border:1px solid #fed7aa;padding:12px;border-radius:10px;color:#9a3412;margin:15px 0}.form-card{max-width:700px;margin:20px auto}.form-card input,.form-card textarea{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;margin:7px 0;outline:none}.supplier-hero{background:#171717;color:#fff;border-radius:20px;padding:35px;margin-bottom:20px}.supplier-hero p{color:#ddd;line-height:1.8}.product-page{padding-top:30px}.product-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:25px}.product-gallery img{width:100%;max-height:520px;object-fit:cover;border-radius:15px}.product-info h1{font-size:34px}.product-price{font-size:28px;font-weight:800;margin:15px 0}.muted{color:var(--muted);line-height:1.8}.back-link{margin-right:auto}.order-success{text-align:center;background:#fff;border:1px solid var(--line);padding:50px 20px;border-radius:20px}.status{display:inline-block;padding:5px 10px;border-radius:15px;background:#fff7ed;color:#9a3412;font-size:12px}
+@media(max-width:850px){.nav{flex-wrap:wrap;padding:12px}.search{order:3;flex-basis:100%}.hero-box{padding:30px;min-height:330px}.hero h1{font-size:36px}.hero-art{opacity:.35}.countries{grid-template-columns:repeat(3,1fr)}.product-grid{grid-template-columns:repeat(2,1fr)}.trust-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr}.cart-layout,.product-layout{grid-template-columns:1fr}}
+@media(max-width:480px){.logo{font-size:24px}.supplier-link{font-size:12px;padding:8px}.hero h1{font-size:29px}.hero p{font-size:15px}.hero-art{font-size:100px}.countries{grid-template-columns:repeat(2,1fr)}.product-grid{gap:9px}.pic{height:165px}.card-body{padding:10px}.trust-grid{grid-template-columns:1fr}.secondary-btn{margin-right:0;margin-top:8px}.hero-box{padding:24px}}
+'''
+
+files["js/store.js"]=r'''export const countries={
+ USA:{name:"أمريكا",flag:"🇺🇸",currency:"USD",rate:1,ship:8},
+ KWT:{name:"الكويت",flag:"🇰🇼",currency:"KWD",rate:0.307,ship:2.5},
+ KSA:{name:"السعودية",flag:"🇸🇦",currency:"SAR",rate:3.75,ship:25},
+ UAE:{name:"الإمارات",flag:"🇦🇪",currency:"AED",rate:3.67,ship:25},
+ EGY:{name:"مصر",flag:"🇪🇬",currency:"EGP",rate:50,ship:100}
+};
+export const getCountry=()=>localStorage.getItem("linaCountry")||"USA";
+export const setCountry=c=>localStorage.setItem("linaCountry",c);
+export const money=v=>{const c=countries[getCountry()]||countries.USA;return new Intl.NumberFormat("en-US",{style:"currency",currency:c.currency,maximumFractionDigits:2}).format(v*c.rate)};
+export async function getProducts(){
+ const saved=localStorage.getItem("linaProducts");
+ if(saved){try{const p=JSON.parse(saved);if(Array.isArray(p)&&p.length)return p}catch{}}
+ const r=await fetch("/data/products.json"); return r.json();
+}
+export function getCart(){try{return JSON.parse(localStorage.getItem("linaCart")||"[]")}catch{return[]}}
+export function saveCart(c){localStorage.setItem("linaCart",JSON.stringify(c));updateCartCount()}
+export function updateCartCount(){const el=document.getElementById("cartCount");if(el)el.textContent=getCart().reduce((n,x)=>n+x.qty,0)}
+export function addToCart(id){const c=getCart();const x=c.find(i=>i.id===id);x?x.qty++:c.push({id,qty:1});saveCart(c);showToast("تمت إضافة المنتج إلى السلة")}
+export function showToast(t){const el=document.getElementById("toast");if(!el)return;el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)}
+export function productById(products,id){return products.find(p=>String(p.id)===String(id))}
+'''
+
+files["js/app.js"]=r'''import {countries,getCountry,setCountry,money,getProducts,addToCart,updateCartCount} from "./store.js";
+let products=[],cat="الكل";
+const $=id=>document.getElementById(id);
+function renderCountries(){ $("countries").innerHTML=Object.entries(countries).map(([k,v])=>`<button class="country ${k===getCountry()?"active":""}" data-country="${k}"><div class="flag">${v.flag}</div><b>${v.name}</b><small>${v.currency}</small></button>`).join("");$("countryLabel").textContent=countries[getCountry()].name}
+function renderCats(){const cats=["الكل",...new Set(products.map(p=>p.cat))];$("categories").innerHTML=cats.map(x=>`<button class="chip ${x===cat?"active":""}" data-cat="${x}">${x}</button>`).join("")}
+function render(){const q=($("searchInput").value||"").trim().toLowerCase();const list=products.filter(p=>(cat==="الكل"||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)));$("resultCount").textContent=`${list.length} منتج`;$("emptyState").classList.toggle("hidden",list.length>0);$("productGrid").innerHTML=list.map(p=>`<article class="card"><a href="product.html?id=${p.id}"><div class="pic">${p.img?`<img loading="lazy" src="${p.img}" alt="${p.name}">`:`<span style="font-size:80px">${p.emoji||"📦"}</span>`}</div></a><div class="card-body"><h3>${p.name}</h3><div class="supplier">${p.cat} • المورد: ${p.supplier||"متجرنا"}</div><div class="price">${money(p.price)}</div><button class="add" data-add="${p.id}">أضف إلى السلة</button></div></article>`).join("")}
+$("countries").addEventListener("click",e=>{const b=e.target.closest("[da
