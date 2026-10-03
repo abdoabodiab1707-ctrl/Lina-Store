@@ -2,13 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f45b7a">
-
+<meta name="description" content="Lina Store - متجر إلكتروني للمنتجات المتنوعة والشحن الدولي">
 <title>Lina Store | متجر لينا</title>
-
-<meta name="description"
-content="Lina Store - متجر إلكتروني لمنتجات متنوعة مع شحن دولي.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,1132 +13,799 @@ content="Lina Store - متجر إلكتروني لمنتجات متنوعة مع
 
 <style>
 :root{
-    --primary:#f45b7a;
-    --primary-dark:#df3f61;
-    --secondary:#111827;
-    --text:#1f2937;
-    --muted:#6b7280;
-    --bg:#f7f8fa;
-    --white:#fff;
-    --border:#e5e7eb;
-    --success:#16a34a;
-    --danger:#dc2626;
-    --shadow:0 10px 35px rgba(17,24,39,.08);
-    --radius:18px;
+--pink:#f45b7a;
+--pink2:#df3f61;
+--dark:#111827;
+--text:#1f2937;
+--muted:#6b7280;
+--bg:#f7f8fa;
+--white:#fff;
+--border:#e5e7eb;
+--green:#16a34a;
+--red:#dc2626;
+--shadow:0 10px 35px rgba(17,24,39,.08);
 }
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    font-family:"Cairo",sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    line-height:1.7;
-}
-
-button,
-input,
-select,
-textarea{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-a{
-    text-decoration:none;
-    color:inherit;
-}
-
-img{
-    max-width:100%;
-    display:block;
-}
-
-/* ================= HEADER ================= */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Cairo,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
 
 .header{
-    position:sticky;
-    top:0;
-    z-index:1000;
-    background:rgba(255,255,255,.96);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
+position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--border)
 }
-
 .nav{
-    max-width:1250px;
-    margin:auto;
-    height:75px;
-    padding:0 20px;
-    display:flex;
-    align-items:center;
-    gap:20px;
+max-width:1250px;margin:auto;min-height:74px;padding:10px 20px;
+display:flex;align-items:center;gap:18px;flex-wrap:wrap
 }
-
-.logo{
-    font-size:26px;
-    font-weight:900;
-    color:var(--primary);
-    white-space:nowrap;
+.logo{font-size:27px;font-weight:900;color:var(--pink);white-space:nowrap}
+.logo span{color:var(--dark)}
+.search{flex:1;position:relative;min-width:180px}
+.search input{
+width:100%;height:45px;border:1px solid var(--border);border-radius:13px;
+padding:0 45px 0 15px;outline:none;background:#f9fafb
 }
-
-.logo span{
-    color:var(--secondary);
+.search input:focus{border-color:var(--pink);background:#fff;box-shadow:0 0 0 3px #f45b7a18}
+.search span{position:absolute;right:15px;top:8px;font-size:20px}
+.actions{display:flex;gap:8px}
+.icon{
+height:43px;min-width:43px;padding:0 11px;border:1px solid var(--border);
+border-radius:12px;background:#fff;font-size:18px;position:relative
 }
-
-.search-box{
-    flex:1;
-    position:relative;
+.icon:hover{border-color:var(--pink);color:var(--pink)}
+.count{
+position:absolute;top:-7px;left:-5px;width:20px;height:20px;border-radius:50%;
+background:var(--pink);color:#fff;font-size:11px;display:flex;
+align-items:center;justify-content:center;font-weight:900
 }
-
-.search-box input{
-    width:100%;
-    height:45px;
-    border:1px solid var(--border);
-    border-radius:13px;
-    padding:0 45px 0 15px;
-    outline:none;
-    background:#f9fafb;
-    transition:.2s;
-}
-
-.search-box input:focus{
-    border-color:var(--primary);
-    background:#fff;
-    box-shadow:0 0 0 3px rgba(244,91,122,.1);
-}
-
-.search-icon{
-    position:absolute;
-    right:15px;
-    top:10px;
-    font-size:20px;
-}
-
-.nav-actions{
-    display:flex;
-    align-items:center;
-    gap:9px;
-}
-
-.icon-btn{
-    border:1px solid var(--border);
-    background:#fff;
-    height:43px;
-    min-width:43px;
-    padding:0 12px;
-    border-radius:12px;
-    position:relative;
-    font-size:19px;
-}
-
-.icon-btn:hover{
-    border-color:var(--primary);
-    color:var(--primary);
-}
-
-.cart-count{
-    position:absolute;
-    top:-7px;
-    left:-5px;
-    width:20px;
-    height:20px;
-    border-radius:50%;
-    background:var(--primary);
-    color:#fff;
-    font-size:11px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:800;
-}
-
-/* ================= HERO ================= */
 
 .hero{
-    background:
-        radial-gradient(circle at 10% 20%,rgba(244,91,122,.18),transparent 30%),
-        radial-gradient(circle at 90% 80%,rgba(17,24,39,.09),transparent 35%),
-        linear-gradient(135deg,#fff,#fff4f6);
-    padding:70px 20px;
+background:
+radial-gradient(circle at 10% 20%,#f45b7a25,transparent 30%),
+radial-gradient(circle at 90% 80%,#11182712,transparent 35%),
+linear-gradient(135deg,#fff,#fff3f6);
+padding:70px 20px
 }
-
-.hero-inner{
-    max-width:1250px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:1.2fr .8fr;
-    gap:45px;
-    align-items:center;
+.hero-in{
+max-width:1250px;margin:auto;display:grid;grid-template-columns:1.15fr .85fr;
+gap:45px;align-items:center
 }
-
 .badge{
-    display:inline-flex;
-    padding:7px 14px;
-    border-radius:30px;
-    background:#ffe4ea;
-    color:var(--primary-dark);
-    font-size:13px;
-    font-weight:800;
-    margin-bottom:15px;
+display:inline-block;background:#ffe3e9;color:var(--pink2);padding:7px 14px;
+border-radius:30px;font-size:13px;font-weight:800;margin-bottom:15px
 }
-
-.hero h1{
-    font-size:clamp(35px,5vw,65px);
-    line-height:1.15;
-    font-weight:900;
-    margin-bottom:20px;
-}
-
-.hero h1 span{
-    color:var(--primary);
-}
-
-.hero p{
-    color:var(--muted);
-    max-width:650px;
-    font-size:17px;
-    margin-bottom:28px;
-}
-
-.hero-buttons{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-}
-
+.hero h1{font-size:clamp(36px,5vw,64px);line-height:1.15;font-weight:900;margin-bottom:18px}
+.hero h1 span{color:var(--pink)}
+.hero p{color:var(--muted);font-size:17px;max-width:650px;margin-bottom:25px}
 .btn{
-    border:0;
-    min-height:48px;
-    padding:0 22px;
-    border-radius:13px;
-    font-weight:800;
-    transition:.2s;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
+min-height:47px;padding:0 20px;border:0;border-radius:12px;font-weight:800;
+display:inline-flex;align-items:center;justify-content:center;gap:7px
 }
-
-.btn-primary{
-    background:var(--primary);
-    color:#fff;
-}
-
-.btn-primary:hover{
-    background:var(--primary-dark);
-    transform:translateY(-2px);
-}
-
-.btn-dark{
-    background:var(--secondary);
-    color:#fff;
-}
-
-.btn-light{
-    background:#fff;
-    border:1px solid var(--border);
-}
-
+.primary{background:var(--pink);color:#fff}
+.primary:hover{background:var(--pink2)}
+.dark{background:var(--dark);color:#fff}
+.light{background:#fff;border:1px solid var(--border)}
+.buttons{display:flex;gap:10px;flex-wrap:wrap}
 .hero-card{
-    background:#fff;
-    border-radius:28px;
-    padding:30px;
-    box-shadow:var(--shadow);
-    transform:rotate(1deg);
+background:#fff;padding:25px;border-radius:25px;box-shadow:var(--shadow)
 }
+.hero-card img{width:100%;height:310px;object-fit:cover;border-radius:18px}
+.hero-card h3{margin-top:15px}
 
-.hero-card img{
-    width:100%;
-    height:310px;
-    object-fit:cover;
-    border-radius:20px;
+.container{max-width:1250px;margin:auto;padding:55px 20px}
+.head{
+display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:23px
 }
-
-.hero-card-info{
-    padding-top:20px;
+.head h2{font-size:29px;font-weight:900}
+.head p{color:var(--muted)}
+.categories{display:flex;gap:10px;overflow:auto;padding-bottom:5px}
+.cat{
+white-space:nowrap;padding:10px 18px;border-radius:30px;background:#fff;
+border:1px solid var(--border);font-weight:700
 }
+.cat.active,.cat:hover{background:var(--pink);color:#fff;border-color:var(--pink)}
 
-.hero-card-info h3{
-    margin-bottom:5px;
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:19px}
+.card{
+background:#fff;border:1px solid var(--border);border-radius:18px;
+overflow:hidden;transition:.25s
 }
-
-/* ================= SECTIONS ================= */
-
-.container{
-    max-width:1250px;
-    margin:auto;
-    padding:60px 20px;
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.pic{position:relative;background:#f3f4f6}
+.pic img{width:100%;height:240px;object-fit:cover}
+.heart{
+position:absolute;top:11px;left:11px;width:39px;height:39px;
+border:0;border-radius:50%;background:#fff;font-size:19px;
+box-shadow:0 4px 15px #00000018
 }
-
-.section-head{
-    display:flex;
-    align-items:end;
-    justify-content:space-between;
-    gap:20px;
-    margin-bottom:25px;
+.heart.active{color:var(--pink)}
+.body{padding:16px}
+.category{color:var(--pink);font-size:12px;font-weight:800}
+.title{font-weight:800;font-size:17px;margin:3px 0}
+.desc{font-size:13px;color:var(--muted);height:43px;overflow:hidden}
+.bottom{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:7px}
+.price{font-weight:900;font-size:18px}
+.small{
+height:37px;padding:0 10px;border-radius:9px;border:1px solid var(--border);
+background:#fff;font-weight:700
 }
+.small.add{background:var(--pink);color:#fff;border-color:var(--pink)}
 
-.section-head h2{
-    font-size:30px;
-    font-weight:900;
-}
-
-.section-head p{
-    color:var(--muted);
-}
-
-/* ================= CATEGORIES ================= */
-
-.categories{
-    display:flex;
-    gap:12px;
-    overflow:auto;
-    padding-bottom:5px;
-}
-
-.category{
-    min-width:max-content;
-    padding:11px 18px;
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:30px;
-    font-weight:700;
-    transition:.2s;
-}
-
-.category:hover,
-.category.active{
-    background:var(--primary);
-    border-color:var(--primary);
-    color:#fff;
-}
-
-/* ================= PRODUCTS ================= */
-
-.products-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-}
-
-.product{
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    overflow:hidden;
-    transition:.25s;
-    position:relative;
-}
-
-.product:hover{
-    transform:translateY(-5px);
-    box-shadow:var(--shadow);
-}
-
-.product-image{
-    position:relative;
-    background:#f3f4f6;
-}
-
-.product-image img{
-    width:100%;
-    height:245px;
-    object-fit:cover;
-}
-
-.wishlist{
-    position:absolute;
-    top:12px;
-    left:12px;
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    border:0;
-    background:#fff;
-    box-shadow:0 5px 15px rgba(0,0,0,.1);
-    font-size:19px;
-}
-
-.wishlist.active{
-    color:var(--primary);
-}
-
-.product-body{
-    padding:17px;
-}
-
-.product-category{
-    color:var(--primary);
-    font-size:12px;
-    font-weight:800;
-}
-
-.product-title{
-    font-size:17px;
-    font-weight:800;
-    margin:4px 0;
-}
-
-.product-description{
-    color:var(--muted);
-    font-size:13px;
-    height:42px;
-    overflow:hidden;
-}
-
-.product-bottom{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:8px;
-    margin-top:15px;
-}
-
-.price{
-    font-size:19px;
-    font-weight:900;
-}
-
-.product-actions{
-    display:flex;
-    gap:7px;
-}
-
-.small-btn{
-    height:38px;
-    padding:0 11px;
-    border-radius:10px;
-    border:1px solid var(--border);
-    background:#fff;
-    font-weight:700;
-}
-
-.small-btn.primary{
-    background:var(--primary);
-    color:#fff;
-    border-color:var(--primary);
-}
-
-/* ================= FEATURES ================= */
-
-.features{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-}
-
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
 .feature{
-    background:#fff;
-    border:1px solid var(--border);
-    padding:25px 18px;
-    border-radius:18px;
-    text-align:center;
+background:#fff;border:1px solid var(--border);border-radius:18px;
+padding:23px 15px;text-align:center
+}
+.feature .ico{font-size:31px}
+.feature h3{font-size:16px}
+.feature p{font-size:13px;color:var(--muted)}
+
+.news{
+background:var(--dark);color:#fff;border-radius:24px;padding:40px;
+display:flex;align-items:center;justify-content:space-between;gap:25px
+}
+.news p{color:#cbd5e1}
+.news form{display:flex;gap:7px;width:420px}
+.news input{
+flex:1;height:47px;border:0;border-radius:11px;padding:0 13px;outline:none
 }
 
-.feature-icon{
-    font-size:32px;
-    margin-bottom:8px;
+.footer{background:#0b1120;color:#fff}
+.footer-in{
+max-width:1250px;margin:auto;padding:50px 20px 25px;
+display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px
 }
-
-.feature h3{
-    font-size:16px;
-    margin-bottom:4px;
+.footer h3{margin-bottom:12px}
+.footer p,.footer a{color:#9ca3af;font-size:14px}
+.footer a{display:block;margin:6px 0}
+.copy{
+border-top:1px solid #1f2937;max-width:1250px;margin:auto;
+padding:17px 20px;color:#6b7280;font-size:13px
 }
-
-.feature p{
-    color:var(--muted);
-    font-size:13px;
-}
-
-/* ================= NEWSLETTER ================= */
-
-.newsletter{
-    background:var(--secondary);
-    color:#fff;
-    border-radius:25px;
-    padding:45px;
-    display:flex;
-    justify-content:space-between;
-    gap:30px;
-    align-items:center;
-}
-
-.newsletter p{
-    color:#cbd5e1;
-}
-
-.newsletter-form{
-    display:flex;
-    gap:8px;
-    width:420px;
-}
-
-.newsletter-form input{
-    flex:1;
-    height:48px;
-    border:0;
-    border-radius:12px;
-    padding:0 15px;
-    outline:none;
-}
-
-/* ================= FOOTER ================= */
-
-.footer{
-    background:#0b1120;
-    color:#fff;
-    margin-top:30px;
-}
-
-.footer-inner{
-    max-width:1250px;
-    margin:auto;
-    padding:55px 20px 25px;
-    display:grid;
-    grid-template-columns:1.5fr 1fr 1fr 1fr;
-    gap:35px;
-}
-
-.footer h3{
-    margin-bottom:15px;
-}
-
-.footer p,
-.footer a{
-    color:#9ca3af;
-    font-size:14px;
-}
-
-.footer a{
-    display:block;
-    margin:7px 0;
-}
-
-.footer a:hover{
-    color:#fff;
-}
-
-.copyright{
-    max-width:1250px;
-    margin:auto;
-    border-top:1px solid #1f2937;
-    padding:18px 20px;
-    color:#6b7280;
-    font-size:13px;
-}
-
-/* ================= MODAL ================= */
 
 .modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:2000;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
+display:none;position:fixed;inset:0;background:#0009;z-index:3000;
+align-items:center;justify-content:center;padding:18px
 }
-
-.modal.show{
-    display:flex;
+.modal.show{display:flex}
+.modalbox{
+background:#fff;width:min(650px,100%);max-height:90vh;overflow:auto;
+border-radius:23px;padding:25px;position:relative
 }
-
-.modal-box{
-    width:min(600px,100%);
-    max-height:90vh;
-    overflow:auto;
-    background:#fff;
-    border-radius:25px;
-    padding:25px;
-    position:relative;
-}
-
 .close{
-    position:absolute;
-    top:15px;
-    left:15px;
-    width:38px;
-    height:38px;
-    border:0;
-    background:#f3f4f6;
-    border-radius:50%;
-    font-size:20px;
+position:absolute;left:14px;top:14px;width:37px;height:37px;
+border:0;border-radius:50%;background:#f3f4f6;font-size:20px
 }
-
-/* ================= CART ================= */
-
-.cart-item{
-    display:grid;
-    grid-template-columns:80px 1fr auto;
-    gap:15px;
-    align-items:center;
-    padding:15px 0;
-    border-bottom:1px solid var(--border);
+.cartitem{
+display:grid;grid-template-columns:75px 1fr auto;gap:13px;
+align-items:center;padding:14px 0;border-bottom:1px solid var(--border)
 }
-
-.cart-item img{
-    width:80px;
-    height:80px;
-    object-fit:cover;
-    border-radius:12px;
-}
-
-.qty{
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-
+.cartitem img{width:75px;height:75px;object-fit:cover;border-radius:11px}
+.qty{display:flex;align-items:center;gap:7px;margin-top:7px}
 .qty button{
-    width:30px;
-    height:30px;
-    border:1px solid var(--border);
-    background:#fff;
-    border-radius:8px;
+width:29px;height:29px;border:1px solid var(--border);background:#fff;border-radius:7px
 }
-
-.cart-summary{
-    background:#f9fafb;
-    border-radius:16px;
-    padding:18px;
-    margin-top:20px;
+.summary{background:#f8fafc;border-radius:15px;padding:16px;margin-top:18px}
+.row{display:flex;justify-content:space-between;margin:7px 0}
+.total{border-top:1px solid var(--border);padding-top:11px;margin-top:10px;font-size:20px;font-weight:900}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.group{margin-bottom:13px}
+.group.full{grid-column:1/-1}
+.group label{display:block;font-size:13px;font-weight:800;margin-bottom:5px}
+.group input,.group select,.group textarea{
+width:100%;border:1px solid var(--border);border-radius:10px;
+padding:11px;outline:none;background:#fff
 }
-
-.summary-row{
-    display:flex;
-    justify-content:space-between;
-    margin:8px 0;
-}
-
-.summary-total{
-    border-top:1px solid var(--border);
-    margin-top:12px;
-    padding-top:12px;
-    font-size:20px;
-    font-weight:900;
-}
-
-/* ================= FORMS ================= */
-
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-
-.form-group{
-    margin-bottom:15px;
-}
-
-.form-group.full{
-    grid-column:1/-1;
-}
-
-.form-group label{
-    display:block;
-    font-size:13px;
-    font-weight:800;
-    margin-bottom:6px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-    width:100%;
-    border:1px solid var(--border);
-    border-radius:11px;
-    padding:12px;
-    outline:none;
-    background:#fff;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-    border-color:var(--primary);
-}
-
-.form-group textarea{
-    min-height:100px;
-    resize:vertical;
-}
-
-/* ================= TOAST ================= */
-
+.group textarea{min-height:90px;resize:vertical}
+.empty{text-align:center;padding:40px 15px;color:var(--muted)}
+.empty .big{font-size:48px}
 .toast{
-    position:fixed;
-    bottom:25px;
-    right:25px;
-    z-index:5000;
-    background:var(--secondary);
-    color:#fff;
-    padding:13px 18px;
-    border-radius:12px;
-    opacity:0;
-    transform:translateY(20px);
-    pointer-events:none;
-    transition:.25s;
+position:fixed;bottom:22px;right:22px;z-index:5000;background:var(--dark);
+color:#fff;padding:12px 18px;border-radius:11px;opacity:0;
+transform:translateY(20px);transition:.25s;pointer-events:none
 }
-
-.toast.show{
-    opacity:1;
-    transform:translateY(0);
-}
-
-/* ================= EMPTY ================= */
-
-.empty{
-    text-align:center;
-    padding:45px 20px;
-    color:var(--muted);
-}
-
-.empty-icon{
-    font-size:50px;
-    margin-bottom:10px;
-}
-
-/* ================= RESPONSIVE ================= */
+.toast.show{opacity:1;transform:translateY(0)}
 
 @media(max-width:1050px){
-    .products-grid{
-        grid-template-columns:repeat(3,1fr);
-    }
-
-    .features{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .hero-inner{
-        grid-template-columns:1fr;
-    }
-
-    .hero-card{
-        max-width:600px;
-        margin:auto;
-    }
+.grid{grid-template-columns:repeat(3,1fr)}
+.features{grid-template-columns:repeat(2,1fr)}
+.hero-in{grid-template-columns:1fr}
+.hero-card{max-width:600px;margin:auto}
 }
-
-@media(max-width:750px){
-    .nav{
-        height:auto;
-        padding:12px 15px;
-        flex-wrap:wrap;
-    }
-
-    .logo{
-        font-size:22px;
-    }
-
-    .search-box{
-        order:3;
-        flex-basis:100%;
-    }
-
-    .products-grid{
-        grid-template-columns:repeat(2,1fr);
-        gap:12px;
-    }
-
-    .product-image img{
-        height:190px;
-    }
-
-    .product-body{
-        padding:12px;
-    }
-
-    .product-title{
-        font-size:14px;
-    }
-
-    .product-description{
-        font-size:12px;
-    }
-
-    .product-bottom{
-        align-items:flex-start;
-        flex-direction:column;
-    }
-
-    .section-head{
-        align-items:flex-start;
-        flex-direction:column;
-    }
-
-    .newsletter{
-        padding:25px;
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .newsletter-form{
-        width:100%;
-    }
-
-    .footer-inner{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .form-grid{
-        grid-template-columns:1fr;
-    }
-
-    .form-group.full{
-        grid-column:auto;
-    }
+@media(max-width:700px){
+.nav{padding:10px 14px}
+.search{order:3;flex-basis:100%}
+.grid{grid-template-columns:repeat(2,1fr);gap:11px}
+.pic img{height:190px}
+.body{padding:11px}
+.title{font-size:14px}
+.desc{font-size:12px}
+.bottom{align-items:flex-start;flex-direction:column}
+.news{flex-direction:column;align-items:stretch;padding:25px}
+.news form{width:100%}
+.footer-in{grid-template-columns:1fr 1fr}
+.formgrid{grid-template-columns:1fr}
+.group.full{grid-column:auto}
 }
-
-@media(max-width:480px){
-    .hero{
-        padding:45px 15px;
-    }
-
-    .hero h1{
-        font-size:36px;
-    }
-
-    .container{
-        padding:45px 15px;
-    }
-
-    .products-grid{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .features{
-        grid-template-columns:1fr;
-    }
-
-    .footer-inner{
-        grid-template-columns:1fr;
-    }
-
-    .cart-item{
-        grid-template-columns:60px 1fr;
-    }
-
-    .cart-item > div:last-child{
-        grid-column:2;
-    }
-
-    .cart-item img{
-        width:60px;
-        height:60px;
-    }
+@media(max-width:450px){
+.hero{padding:45px 15px}
+.hero h1{font-size:36px}
+.container{padding:42px 15px}
+.footer-in{grid-template-columns:1fr}
+.cartitem{grid-template-columns:60px 1fr}
+.cartitem img{width:60px;height:60px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
-
 <header class="header">
-    <nav class="nav">
+<nav class="nav">
 
-        <a href="#" class="logo">
-            Lina <span>Store</span>
-        </a>
+<a class="logo" href="#">Lina <span>Store</span></a>
 
-        <div class="search-box">
-            <span class="search-icon">🔎</span>
-            <input
-                id="searchInput"
-                type="search"
-                placeholder="ابحث عن منتج..."
-                oninput="searchProducts()">
-        </div>
+<div class="search">
+<span>🔎</span>
+<input id="search" type="search" placeholder="ابحث عن منتج..." oninput="search()">
+</div>
 
-        <div class="nav-actions">
+<div class="actions">
+<button class="icon" onclick="wishlist()">❤️</button>
+<button class="icon" onclick="account()">👤</button>
+<button class="icon" onclick="cart()">🛒<b class="count" id="count">0</b></button>
+</div>
 
-            <button class="icon-btn" onclick="openWishlist()" title="المفضلة">
-                ❤️
-            </button>
-
-            <button class="icon-btn" onclick="openAccount()" title="حسابي">
-                👤
-            </button>
-
-            <button class="icon-btn" onclick="openCart()" title="السلة">
-                🛒
-                <span class="cart-count" id="cartCount">0</span>
-            </button>
-
-        </div>
-
-    </nav>
+</nav>
 </header>
 
-
-<!-- ================= HERO ================= -->
-
 <section class="hero">
+<div class="hero-in">
 
-    <div class="hero-inner">
+<div>
+<div class="badge">🌍 تسوق من أي مكان</div>
 
-        <div>
+<h1>
+اكتشف منتجاتك
+<span>المفضلة</span>
+بسهولة
+</h1>
 
-            <div class="badge">
-                🌍 تسوق من أي مكان
-            </div>
+<p>
+Lina Store متجر إلكتروني حديث للمنتجات المتنوعة،
+مع تجربة شراء سهلة ودعم عدة دول وعملات.
+</p>
 
-            <h1>
-                اكتشف منتجاتك
-                <span>المفضلة</span>
-                بسهولة
-            </h1>
+<div class="buttons">
+<button class="btn primary" onclick="productsScroll()">🛍️ ابدأ التسوق</button>
+<button class="btn dark" onclick="supplier()">🤝 كن موردًا</button>
+</div>
+</div>
 
-            <p>
-                Lina Store يجمع لك منتجات متنوعة بأسلوب بسيط وسريع،
-                مع إمكانية الطلب من دول مختلفة وتجربة شراء سهلة على الموبايل والكمبيوتر.
-            </p>
+<div class="hero-card">
+<img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1000&q=85">
+<h3>تجربة تسوق مختلفة</h3>
+<p style="color:#6b7280">منتجات متنوعة وتجربة مصممة للمستخدم.</p>
+</div>
 
-            <div class="hero-buttons">
-
-                <button
-                    class="btn btn-primary"
-                    onclick="scrollToProducts()">
-                    🛍️ ابدأ التسوق
-                </button>
-
-                <button
-                    class="btn btn-dark"
-                    onclick="openSupplier()">
-                    🤝 كن موردًا
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="hero-card">
-
-            <img
-                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1000&q=85"
-                alt="Lina Store">
-
-            <div class="hero-card-info">
-
-                <h3>تجربة تسوق مختلفة</h3>
-
-                <p style="color:#6b7280">
-                    منتجات متنوعة، طلب سهل، وتجربة مصممة للمستخدم.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
+</div>
 </section>
-
-
-<!-- ================= CATEGORIES ================= -->
 
 <section class="container">
-
-    <div class="section-head">
-
-        <div>
-            <h2>تصفح الأقسام</h2>
-            <p>اختار القسم اللي يناسبك</p>
-        </div>
-
-    </div>
-
-    <div class="categories" id="categories"></div>
-
+<div class="head">
+<div>
+<h2>تصفح الأقسام</h2>
+<p>اختار القسم المناسب لك</p>
+</div>
+</div>
+<div class="categories" id="categories"></div>
 </section>
-
-
-<!-- ================= PRODUCTS ================= -->
 
 <section class="container" id="productsSection">
 
-    <div class="section-head">
+<div class="head">
+<div>
+<h2>منتجات مميزة</h2>
+<p id="info">منتجات متنوعة</p>
+</div>
 
-        <div>
-            <h2>منتجات مميزة</h2>
-            <p id="productsInfo">اختيارات متنوعة لك</p>
-        </div>
+<select id="sort" onchange="sortProducts()" style="padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:white">
+<option value="default">ترتيب افتراضي</option>
+<option value="low">السعر من الأقل</option>
+<option value="high">السعر من الأعلى</option>
+<option value="name">الاسم</option>
+</select>
 
-        <select
-            id="sortSelect"
-            onchange="sortProducts()"
-            style="
-                padding:11px 15px;
-                border:1px solid #e5e7eb;
-                border-radius:12px;
-                background:#fff;
-                outline:none;
-            ">
+</div>
 
-            <option value="default">ترتيب افتراضي</option>
-            <option value="low">السعر من الأقل</option>
-            <option value="high">السعر من الأعلى</option>
-            <option value="name">الاسم</option>
-
-        </select>
-
-    </div>
-
-    <div class="products-grid" id="products"></div>
-
+<div class="grid" id="products"></div>
 </section>
-
-
-<!-- ================= FEATURES ================= -->
 
 <section class="container">
+<div class="features">
 
-    <div class="features">
+<div class="feature">
+<div class="ico">🌍</div>
+<h3>شحن دولي</h3>
+<p>دعم عدة دول وعملات.</p>
+</div>
 
-        <div class="feature">
-            <div class="feature-icon">🌍</div>
-            <h3>شحن دولي</h3>
-            <p>دعم عدة دول وعملات.</p>
-        </div>
+<div class="feature">
+<div class="ico">🔒</div>
+<h3>تجربة آمنة</h3>
+<p>واجهة بسيطة وسهلة.</p>
+</div>
 
-        <div class="feature">
-            <div class="feature-icon">🔒</div>
-            <h3>تجربة آمنة</h3>
-            <p>تصميم يحافظ على بيانات العميل.</p>
-        </div>
+<div class="feature">
+<div class="ico">⚡</div>
+<h3>طلب سريع</h3>
+<p>أضف منتجاتك للسلة بسهولة.</p>
+</div>
 
-        <div class="feature">
-            <div class="feature-icon">⚡</div>
-            <h3>طلب سريع</h3>
-            <p>إضافة للسلة وإتمام الطلب بسهولة.</p>
-        </div>
+<div class="feature">
+<div class="ico">🤝</div>
+<h3>نظام الموردين</h3>
+<p>استقبال طلبات الموردين.</p>
+</div>
 
-        <div class="feature">
-            <div class="feature-icon">🤝</div>
-            <h3>نظام الموردين</h3>
-            <p>إمكانية استقبال منتجات الموردين.</p>
-        </div>
-
-    </div>
-
+</div>
 </section>
-
-
-<!-- ================= NEWSLETTER ================= -->
 
 <section class="container">
+<div class="news">
 
-    <div class="newsletter">
+<div>
+<h2>اشترك في عروض Lina Store</h2>
+<p>احصل على أحدث المنتجات والعروض.</p>
+</div>
 
-        <div>
-            <h2>اشترك في عروض Lina Store</h2>
-            <p>
-                سجل بريدك للحصول على أحدث المنتجات والعروض.
-            </p>
-        </div>
+<form onsubmit="subscribe(event)">
+<input id="email" type="email" placeholder="البريد الإلكتروني" required>
+<button class="btn primary">اشتراك</button>
+</form>
 
-        <form
-            class="newsletter-form"
-            onsubmit="subscribeNewsletter(event)">
-
-            <input
-                id="newsletterEmail"
-                type="email"
-                placeholder="البريد الإلكتروني"
-                required>
-
-            <button class="btn btn-primary">
-                اشتراك
-            </button>
-
-        </form>
-
-    </div>
-
+</div>
 </section>
-
-
-<!-- ================= FOOTER ================= -->
 
 <footer class="footer">
 
-    <div class="footer-inner">
+<div class="footer-in">
 
-        <div>
-            <h3>Lina Store</h3>
+<div>
+<h3>Lina Store</h3>
+<p>
+متجر إلكتروني حديث للمنتجات المتنوعة،
+مصمم للتوسع في الأسواق المحلية والدولية.
+</p>
+</div>
 
-            <p>
-                متجر إلكتروني حديث للمنتجات المتنوعة،
-                مصمم للتوسع في الأسواق المحلية والدولية.
-            </p>
-        </div>
+<div>
+<h3>المتجر</h3>
+<a href="#productsSection">المنتجات</a>
+<a href="#" onclick="cart();return false">السلة</a>
+<a href="#" onclick="wishlist();return false">المفضلة</a>
+</div>
 
-        <div>
-            <h3>المتجر</h3>
+<div>
+<h3>الشركاء</h3>
+<a href="#" onclick="supplier();return false">كن موردًا</a>
+<a href="#" onclick="supplier();return false">نظام الموردين</a>
+</div>
 
-            <a href="#productsSection">
-                المنتجات
-            </a>
+<div>
+<h3>الدعم</h3>
+<a href="#" onclick="toast('مركز الدعم قريبًا');return false">مركز المساعدة</a>
+<a href="#" onclick="toast('سياسة الإرجاع قريبًا');return false">سياسة الإرجاع</a>
+<a href="#" onclick="toast('سياسة الخصوصية قريبًا');return false">الخصوصية</a>
+</div>
 
-            <a href="#" onclick="openCart();return false;">
-                السلة
-            </a>
+</div>
 
-            <a href="#" onclick="openWishlist();return false;">
-                المفضلة
-            </a>
-        </div>
-
-        <div>
-            <h3>للشركاء</h3>
-
-            <a href="#" onclick="openSupplier();return false;">
-                كن موردًا
-            </a>
-
-            <a href="#" onclick="openSupplier();return false;">
-                نظام الموردين
-            </a>
-
-        </div>
-
-        <div>
-            <h3>الدعم</h3>
-
-            <a href="#" onclick="showToast('سيتم إضافة مركز الدعم قريبًا');return false;">
-                مركز المساعدة
-            </a>
-
-            <a href="#" onclick="showToast('سيتم إضافة سياسة الإرجاع قريبًا');return false;">
-                سياسة الإرجاع
-            </a>
-
-            <a href="#" onclick="showToast('سيتم إضافة سياسة الخصوصية قريبًا');return false;">
-                الخصوصية
-            </a>
-
-        </div>
-
-    </div>
-
-    <div class="copyright">
-        © 2026 Lina Store — جميع الحقوق محفوظة
-    </div>
+<div class="copy">
+© 2026 Lina Store — جميع الحقوق محفوظة
+</div>
 
 </footer>
 
+<div class="modal" id="modal">
+<div class="modalbox" id="modalbox"></div>
+</div>
 
-<!-- ================= MODAL =
+<div class="toast" id="toast"></div>
+
+<script>
+
+const PRODUCTS=[
+
+{
+id:1,
+name:"ساعة ذكية",
+category:"إلكترونيات",
+price:39.99,
+image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85",
+desc:"ساعة ذكية أنيقة للاستخدام اليومي."
+},
+
+{
+id:2,
+name:"سماعات لاسلكية",
+category:"إلكترونيات",
+price:29.99,
+image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85",
+desc:"سماعات لاسلكية بتصميم عصري وصوت واضح."
+},
+
+{
+id:3,
+name:"حقيبة نسائية",
+category:"أزياء",
+price:44.99,
+image:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=85",
+desc:"حقيبة أنيقة مناسبة للاستخدام اليومي."
+},
+
+{
+id:4,
+name:"حذاء رياضي",
+category:"أزياء",
+price:54.99,
+image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85",
+desc:"حذاء رياضي مريح ومناسب للحركة."
+},
+
+{
+id:5,
+name:"زجاجة مياه حرارية",
+category:"منزل",
+price:19.99,
+image:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=900&q=85",
+desc:"زجاجة حرارية عملية للاستخدام اليومي."
+},
+
+{
+id:6,
+name:"نظارة شمسية",
+category:"أزياء",
+price:24.99,
+image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=900&q=85",
+desc:"نظارة شمسية بتصميم عصري."
+},
+
+{
+id:7,
+name:"مصباح ديكور",
+category:"منزل",
+price:34.99,
+image:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85",
+desc:"مصباح ديكور أنيق."
+},
+
+{
+id:8,
+name:"ماكينة قهوة",
+category:"منزل",
+price:79.99,
+image:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=85",
+desc:"ماكينة قهوة منزلية بتصميم عملي."
+},
+
+{
+id:9,
+name:"حامل هاتف للسيارة",
+category:"إكسسوارات",
+price:14.99,
+image:"https://images.unsplash.com/photo-1601758123927-1964a2a6b5b0?auto=format&fit=crop&w=900&q=85",
+desc:"حامل هاتف عملي للسيارة."
+},
+
+{
+id:10,
+name:"حقيبة ظهر",
+category:"أزياء",
+price:39.99,
+image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85",
+desc:"حقيبة ظهر مناسبة للعمل والسفر."
+},
+
+{
+id:11,
+name:"سماعة محمولة",
+category:"إلكترونيات",
+price:49.99,
+image:"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=900&q=85",
+desc:"سماعة محمولة للاستمتاع بالموسيقى."
+},
+
+{
+id:12,
+name:"منظم مكتب",
+category:"مكتب",
+price:17.99,
+image:"https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=900&q=85",
+desc:"منظم عملي للمكتب."
+}
+
+];
+
+const COUNTRIES={
+USA:{name:"🇺🇸 الولايات المتحدة",currency:"USD",symbol:"$",ship:8},
+KWT:{name:"🇰🇼 الكويت",currency:"KWD",symbol:"د.ك",ship:2.5},
+KSA:{name:"🇸🇦 السعودية",currency:"SAR",symbol:"ر.س",ship:25},
+UAE:{name:"🇦🇪 الإمارات",currency:"AED",symbol:"د.إ",ship:25},
+EGY:{name:"🇪🇬 مصر",currency:"EGP",symbol:"ج.م",ship:100}
+};
+
+const RATE={
+USD:1,
+KWD:.307,
+SAR:3.75,
+AED:3.67,
+EGP:50
+};
+
+let state={
+country:localStorage.getItem("linaCountry")||"USA",
+category:"الكل",
+search:"",
+sort:"default",
+cart:JSON.parse(localStorage.getItem("linaCart")||"[]"),
+wish:JSON.parse(localStorage.getItem("linaWish")||"[]")
+};
+
+function save(){
+localStorage.setItem("linaCart",JSON.stringify(state.cart));
+localStorage.setItem("linaWish",JSON.stringify(state.wish));
+localStorage.setItem("linaCountry",state.country);
+}
+
+function price(usd){
+let c=COUNTRIES[state.country];
+return (usd*RATE[c.currency]).toFixed(2)+" "+c.symbol;
+}
+
+function categories(){
+
+let cats=["الكل",...new Set(PRODUCTS.map(x=>x.category))];
+
+document.getElementById("categories").innerHTML=cats.map(x=>`
+<button class="cat ${x===state.category?"active":""}" onclick="category('${x}')">${x}</button>
+`).join("");
+
+}
+
+function category(x){
+state.category=x;
+categories();
+render();
+}
+
+function filtered(){
+
+let arr=[...PRODUCTS];
+
+if(state.category!=="الكل")
+arr=arr.filter(x=>x.category===state.category);
+
+if(state.search){
+let q=state.search.toLowerCase();
+arr=arr.filter(x=>
+x.name.toLowerCase().includes(q)||
+x.category.toLowerCase().includes(q)||
+x.desc.toLowerCase().includes(q)
+);
+}
+
+if(state.sort==="low")arr.sort((a,b)=>a.price-b.price);
+if(state.sort==="high")arr.sort((a,b)=>b.price-a.price);
+if(state.sort==="name")arr.sort((a,b)=>a.name.localeCompare(b.name));
+
+return arr;
+
+}
+
+function render(){
+
+let list=filtered();
+
+document.getElementById("info").textContent=
+`تم العثور على ${list.length} منتج`;
+
+document.getElementById("products").innerHTML=list.length?
+list.map(card).join(""):
+`
+<div class="empty" style="grid-column:1/-1">
+<div class="big">🔎</div>
+<h3>لا توجد منتجات</h3>
+<p>جرب البحث بكلمة مختلفة.</p>
+</div>
+`;
+
+}
+
+function card(p){
+
+let liked=state.wish.includes(p.id);
+
+return `
+<article class="card">
+
+<div class="pic">
+
+<img src="${p.image}" alt="${p.name}" loading="lazy">
+
+<button class="heart ${liked?"active":""}" onclick="toggleWish(${p.id})">
+${liked?"♥":"♡"}
+</button>
+
+</div>
+
+<div class="body">
+
+<div class="category">${p.category}</div>
+
+<div class="title">${p.name}</div>
+
+<div class="desc">${p.desc}</div>
+
+<div class="bottom">
+
+<div class="price">${price(p.price)}</div>
+
+<div>
+<button class="small" onclick="details(${p.id})">👁️</button>
+<button class="small add" onclick="add(${p.id})">+ 🛒</button>
+</div>
+
+</div>
+
+</div>
+</article>
+`;
+
+}
+
+function search(){
+state.search=document.getElementById("search").value.trim();
+render();
+}
+
+function sortProducts(){
+state.sort=document.getElementById("sort").value;
+render();
+}
+
+function add(id){
+
+let item=state.cart.find(x=>x.id===id);
+
+if(item)item.qty++;
+else state.cart.push({id:id,qty:1});
+
+save();
+updateCount();
+toast("تمت إضافة المنتج للسلة 🛒");
+
+}
+
+function updateCount(){
+
+let n=state.cart.reduce((s,x)=>s+x.qty,0);
+document.getElementById("count").textContent=n;
+
+}
+
+function items(){
+
+return state.cart.map(x=>{
+let p=PRODUCTS.find(y=>y.id===x.id);
+return p?{...p,qty:x.qty}:null;
+}).filter(Boolean);
+
+}
+
+function subtotal(){
+
+return items().reduce((s,x)=>
+s+x.price*RATE[COUNTRIES[state.country].currency]*x.qty,0);
+
+}
+
+function cart(){
+
+let list=items();
+
+if(!list.length){
+
+modal(`
+<button class="close" onclick="closeModal()">×</button>
+<div class="empty">
+<div class="big">🛒</div>
+<h2>السلة فارغة</h2>
+<p>أضف بعض المنتجات أولًا.</p>
+<button class="btn primary" onclick="closeModal();productsScroll()">ابدأ التسوق</button>
+</div>
+`);
+return;
+
+}
+
+let sub=subtotal();
+let ship=COUNTRIES[state.country].ship;
+let total=sub+ship;
+
+modal(`
+
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>سلة المشتريات 🛒</h2>
+
+${list.map(x=>`
+
+<div class="cartitem">
+
+<img src="${x.image}">
+
+<div>
+<strong>${x.name}</strong>
+<div style="color:#6b7280;font-size:13px">${price(x.price)}</div>
+
+<div class="qty">
+
+<button onclick="qty(${x.id},-1)">−</button>
+<b>${x.qty}</b>
+<button onclick="qty(${x.id},1)">+</button>
+
+<button onclick="removeItem(${x.id})" style="border:0;background:none;color:#dc2626">
+حذف
+</button>
+
+</div>
+</div>
+
+<strong>${price(x.price*x.qty)}</strong>
+
+</div>
+
+`).join("")}
+
+<div class="summary">
+
+<div class="row">
+<span>الدولة</span>
+<b>${COUNTRIES[state.country].name}</b>
+</div>
+
+<div class="row">
+<span>الإجمالي الفرعي</span>
+<b>${sub.toFixed(2)} ${COUNTRIES[state.country].symbol}</b>
+</div>
+
+<div class="row">
+<span>الشحن</span>
+<b>${ship} ${COUNTRIES[state.country].symbol}</b>
+</div>
+
+<div class="row total">
+<span>الإجمالي</span>
+<b>${total.toFixed(2)} ${COUNTRIES[state.country].symbol}</b>
+</div>
+
+</div>
+
+<button class="btn primary" style="width:100%;margin-top:15px" onclick="checkout()">
+إتمام الطلب
+</button>
+
+`);
+
+}
+
+function qty(id,n){
+
+let x=state.cart.find(y=>y.id===id);
+if(!x)return;
+
+x.qty
