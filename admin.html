@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Lina Store - Admin</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f7f7f8;
+color:#222;
+}
+
+header{
+background:#111827;
+color:white;
+padding:20px;
+}
+
+header h1{
+margin:0;
+font-size:24px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-bottom:20px;
+}
+
+.stat{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 3px 12px #00000012;
+}
+
+.stat strong{
+display:block;
+font-size:28px;
+margin-top:8px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 3px 12px #00000012;
+}
+
+.order{
+border:1px solid #eee;
+border-radius:12px;
+padding:15px;
+margin-top:12px;
+}
+
+.order h3{
+margin:0 0 8px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.badge{
+background:#fff0f6;
+color:#d63384;
+padding:5px 10px;
+border-radius:20px;
+font-size:13px;
+}
+
+button{
+border:0;
+border-radius:10px;
+padding:10px 15px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.refresh{
+background:#ec4899;
+color:white;
+}
+
+.clear{
+background:#ef4444;
+color:white;
+}
+
+.empty{
+text-align:center;
+padding:30px;
+color:#777;
+}
+
+@media(max-width:700px){
+
+.stats{
+grid-template-columns:1fr;
+}
+
+.container{
+padding:12px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="container">
+
+<h1>🛍️ Lina Store — لوحة التحكم</h1>
+
+<p style="margin-bottom:0">
+إدارة ومتابعة طلبات المتجر
+</p>
+
+</div>
+
+</header>
+
+<main class="container">
+
+<div class="stats">
+
+<div class="stat">
+📦 الطلبات
+<strong id="ordersCount">0</strong>
+</div>
+
+<div class="stat">
+💰 آخر إجمالي
+<strong id="lastTotal">0</strong>
+</div>
+
+<div class="stat">
+🌍 الدولة
+<strong id="lastCountry">-</strong>
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="row">
+
+<h2>📋 آخر طلب</h2>
+
+<div>
+
+<button class="refresh"
+onclick="loadOrder()">
+🔄 تحديث
+</button>
+
+<button class="clear"
+onclick="clearOrder()">
+حذف
+</button>
+
+</div>
+
+</div>
+
+<div id="orders">
+
+<div class="empty">
+لا توجد طلبات محفوظة على هذا الجهاز.
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+const COUNTRIES={
+
+USA:{
+name:"🇺🇸 الولايات المتحدة",
+symbol:"$"
+},
+
+KWT:{
+name:"🇰🇼 الكويت",
+symbol:"د.ك"
+},
+
+KSA:{
+name:"🇸🇦 السعودية",
+symbol:"ر.س"
+},
+
+UAE:{
+name:"🇦🇪 الإمارات",
+symbol:"د.إ"
+},
+
+EGY:{
+name:"🇪🇬 مصر",
+symbol:"ج.م"
+}
+
+};
+
+function loadOrder(){
+
+let data=localStorage.getItem("linaLastOrder");
+
+if(!data){
+
+document.getElementById("orders").innerHTML=`
+<div class="empty">
+لا يوجد طلب محفوظ.
+</div>
+`;
+
+document.getElementById("ordersCount").textContent="0";
+document.getElementById("lastTotal").textContent="0";
+document.getElementById("lastCountry").textContent="-";
+
+return;
+
+}
+
+let order=JSON.parse(data);
+
+document.getElementById("ordersCount").textContent="1";
+
+document.getElementById("lastTotal").textContent=
+order.total+" "+
+(COUNTRIES[order.country]?.symbol||"");
+
+document.getElementById("lastCountry").textContent=
+COUNTRIES[order.country]?.name||order.country;
+
+let products="";
+
+if(order.items){
+
+products=order.items.map(x=>`
+<li>
+${x.name} × ${x.qty}
+</li>
+`).join("");
+
+}
+
+document.getElementById("orders").innerHTML=`
+
+<div class="order">
+
+<div class="row">
+
+<h3>
+📦 ${order.id}
+</h3>
+
+<span class="badge">
+${order.date}
+</span>
+
+</div>
+
+<p>
+👤 <strong>الاسم:</strong>
+${order.name}
+</p>
+
+<p>
+📱 <strong>الهاتف:</strong>
+${order.phone}
+</p>
+
+<p>
+🌍 <strong>الدولة:</strong>
+${COUNTRIES[order.country]?.name||order.country}
+</p>
+
+<p>
+🏙️ <strong>المدينة:</strong>
+${order.city}
+</p>
+
+<p>
+📍 <strong>العنوان:</strong>
+${order.address}
+</p>
+
+<p>
+📝 <strong>ملاحظات:</strong>
+${order.notes||"لا توجد"}
+</p>
+
+<p>
+🛒 <strong>المنتجات:</strong>
+</p>
+
+<ul>
+${products}
+</ul>
+
+<p>
+💰 <strong>الإجمالي:</strong>
+${order.total}
+${COUNTRIES[order.country]?.symbol||""}
+</p>
+
+</div>
+
+`;
+
+}
+
+function clearOrder(){
+
+if(!confirm("هل تريد حذف الطلب المحفوظ؟")){
+return;
+}
+
+localStorage.removeItem("linaLastOrder");
+
+loadOrder();
+
+}
+
+loadOrder();
+
+</script>
+
+</body>
+
+</html>
