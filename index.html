@@ -795,7 +795,9 @@ ${list.map(x=>`
 
 </div>
 
-<button class="btn primary" style="width:100%;margin-top:15px" onclick="checkout()">
+<button class="btn primary"
+style="width:100%;margin-top:15px"
+onclick="checkout()">
 إتمام الطلب
 </button>
 
@@ -808,4 +810,433 @@ function qty(id,n){
 let x=state.cart.find(y=>y.id===id);
 if(!x)return;
 
-x.qty
+x.qty+=n;
+
+if(x.qty<=0){
+state.cart=state.cart.filter(y=>y.id!==id);
+}
+
+save();
+updateCount();
+cart();
+
+}
+
+function removeItem(id){
+
+state.cart=state.cart.filter(x=>x.id!==id);
+
+save();
+updateCount();
+cart();
+
+toast("تم حذف المنتج");
+
+}
+
+function toggleWish(id){
+
+if(state.wish.includes(id)){
+state.wish=state.wish.filter(x=>x!==id);
+toast("تمت إزالة المنتج من المفضلة");
+}else{
+state.wish.push(id);
+toast("تمت إضافة المنتج للمفضلة ❤️");
+}
+
+save();
+render();
+
+}
+
+function details(id){
+
+let p=PRODUCTS.find(x=>x.id===id);
+if(!p)return;
+
+modal(`
+
+<button class="close" onclick="closeModal()">×</button>
+
+<img src="${p.image}"
+style="width:100%;height:300px;object-fit:cover;border-radius:17px">
+
+<div style="margin-top:18px">
+
+<div class="category">${p.category}</div>
+<h2 style="margin:5px 0">${p.name}</h2>
+
+<p style="color:#6b7280">${p.desc}</p>
+
+<div style="font-size:25px;font-weight:900;margin-top:15px">
+${price(p.price)}
+</div>
+
+<button class="btn primary"
+style="width:100%;margin-top:18px"
+onclick="add(${p.id});closeModal()">
+🛒 إضافة إلى السلة
+</button>
+
+</div>
+
+`);
+
+}
+
+function account(){
+
+modal(`
+
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>👤 حسابي</h2>
+
+<p style="color:#6b7280;margin:8px 0 20px">
+سجّل بياناتك لمتابعة طلباتك.
+</p>
+
+<div class="group">
+<label>الاسم</label>
+<input id="accountName" placeholder="اكتب اسمك">
+</div>
+
+<div class="group">
+<label>البريد الإلكتروني</label>
+<input id="accountEmail" type="email" placeholder="example@email.com">
+</div>
+
+<button class="btn primary"
+style="width:100%"
+onclick="saveAccount()">
+حفظ البيانات
+</button>
+
+`);
+
+}
+
+function saveAccount(){
+
+let name=document.getElementById("accountName").value.trim();
+let email=document.getElementById("accountEmail").value.trim();
+
+if(!name||!email){
+toast("اكتب الاسم والبريد الإلكتروني");
+return;
+}
+
+localStorage.setItem(
+"linaAccount",
+JSON.stringify({name,email})
+);
+
+toast("تم حفظ بيانات الحساب ✅");
+closeModal();
+
+}
+
+function checkout(){
+
+let list=items();
+
+if(!list.length){
+toast("السلة فارغة");
+return;
+}
+
+modal(`
+
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>📦 إتمام الطلب</h2>
+
+<p style="color:#6b7280;margin-bottom:20px">
+أدخل بيانات الشحن لإرسال طلبك.
+</p>
+
+<div class="formgrid">
+
+<div class="group">
+<label>الاسم الكامل</label>
+<input id="orderName" placeholder="الاسم الكامل">
+</div>
+
+<div class="group">
+<label>رقم الهاتف</label>
+<input id="orderPhone" type="tel" placeholder="رقم الهاتف">
+</div>
+
+<div class="group">
+<label>الدولة</label>
+
+<select id="orderCountry">
+
+${Object.entries(COUNTRIES).map(([key,c])=>`
+<option value="${key}" ${key===state.country?"selected":""}>
+${c.name}
+</option>
+`).join("")}
+
+</select>
+
+</div>
+
+<div class="group">
+<label>المدينة</label>
+<input id="orderCity" placeholder="المدينة">
+</div>
+
+<div class="group full">
+<label>العنوان بالتفصيل</label>
+<textarea id="orderAddress" placeholder="العنوان بالتفصيل"></textarea>
+</div>
+
+<div class="group full">
+<label>ملاحظات الطلب</label>
+<textarea id="orderNotes" placeholder="أي ملاحظات إضافية"></textarea>
+</div>
+
+</div>
+
+<button class="btn primary"
+style="width:100%;margin-top:5px"
+onclick="submitOrder()">
+تأكيد الطلب 📦
+</button>
+
+`);
+
+}
+
+function submitOrder(){
+
+let name=document.getElementById("orderName").value.trim();
+let phone=document.getElementById("orderPhone").value.trim();
+let city=document.getElementById("orderCity").value.trim();
+let address=document.getElementById("orderAddress").value.trim();
+let country=document.getElementById("orderCountry").value;
+
+if(!name||!phone||!city||!address){
+toast("من فضلك أكمل بيانات الطلب");
+return;
+}
+
+state.country=country;
+
+let order={
+id:"LIN-"+Date.now(),
+name:name,
+phone:phone,
+city:city,
+address:address,
+notes:document.getElementById("orderNotes").value.trim(),
+items:items(),
+total:subtotal()+COUNTRIES[state.country].ship,
+country:state.country,
+date:new Date().toLocaleString("ar-EG")
+};
+
+localStorage.setItem(
+"linaLastOrder",
+JSON.stringify(order)
+);
+
+state.cart=[];
+
+save();
+updateCount();
+
+modal(`
+
+<button class="close" onclick="closeModal()">×</button>
+
+<div class="empty">
+
+<div class="big">✅</div>
+
+<h2>تم استلام طلبك</h2>
+
+<p>
+رقم الطلب:
+<strong>${order.id}</strong>
+</p>
+
+<p style="margin-top:8px">
+شكرًا لشرائك من Lina Store ❤️
+</p>
+
+<button class="btn primary"
+style="margin-top:18px"
+onclick="closeModal()">
+إغلاق
+</button>
+
+</div>
+
+`);
+
+}
+
+function supplier(){
+
+modal(`
+
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>🤝 كن موردًا</h2>
+
+<p style="color:#6b7280;margin:7px 0 20px">
+أرسل بياناتك وسنتواصل معك.
+</p>
+
+<div class="group">
+<label>اسم الشركة / المورد</label>
+<input id="supplierName" placeholder="اسم الشركة أو المورد">
+</div>
+
+<div class="group">
+<label>البريد الإلكتروني</label>
+<input id="supplierEmail" type="email" placeholder="البريد الإلكتروني">
+</div>
+
+<div class="group">
+<label>رقم الهاتف</label>
+<input id="supplierPhone" type="tel" placeholder="رقم الهاتف">
+</div>
+
+<div class="group">
+<label>نوع المنتجات</label>
+<input id="supplierProducts" placeholder="مثال: ملابس، إلكترونيات...">
+</div>
+
+<div class="group">
+<label>رسالة</label>
+<textarea id="supplierMessage" placeholder="اكتب تفاصيل المنتجات أو العرض"></textarea>
+</div>
+
+<button class="btn primary"
+style="width:100%"
+onclick="submitSupplier()">
+إرسال طلب الشراكة
+</button>
+
+`);
+
+}
+
+function submitSupplier(){
+
+let name=document.getElementById("supplierName").value.trim();
+let email=document.getElementById("supplierEmail").value.trim();
+let phone=document.getElementById("supplierPhone").value.trim();
+
+if(!name||!email||!phone){
+toast("أكمل بيانات المورد");
+return;
+}
+
+let supplierData={
+name:name,
+email:email,
+phone:phone,
+products:document.getElementById("supplierProducts").value.trim(),
+message:document.getElementById("supplierMessage").value.trim(),
+date:new Date().toLocaleString("ar-EG")
+};
+
+localStorage.setItem(
+"linaSupplier",
+JSON.stringify(supplierData)
+);
+
+modal(`
+
+<button class="close" onclick="closeModal()">×</button>
+
+<div class="empty">
+
+<div class="big">🤝</div>
+
+<h2>تم إرسال الطلب</h2>
+
+<p>سنتواصل معك بعد مراجعة بياناتك.</p>
+
+<button class="btn primary"
+style="margin-top:18px"
+onclick="closeModal()">
+تم
+</button>
+
+</div>
+
+`);
+
+}
+
+function subscribe(event){
+
+event.preventDefault();
+
+let email=document.getElementById("email").value.trim();
+
+if(!email)return;
+
+localStorage.setItem("linaSubscriber",email);
+
+document.getElementById("email").value="";
+
+toast("تم الاشتراك بنجاح 📧");
+
+}
+
+function productsScroll(){
+
+document.getElementById("productsSection")
+.scrollIntoView({behavior:"smooth"});
+
+}
+
+function modal(html){
+
+document.getElementById("modalbox").innerHTML=html;
+document.getElementById("modal").classList.add("show");
+
+}
+
+function closeModal(){
+
+document.getElementById("modal").classList.remove("show");
+
+}
+
+function toast(message){
+
+let el=document.getElementById("toast");
+
+el.textContent=message;
+el.classList.add("show");
+
+clearTimeout(window.toastTimer);
+
+window.toastTimer=setTimeout(()=>{
+el.classList.remove("show");
+},2500);
+
+}
+
+document.getElementById("modal").addEventListener("click",function(e){
+
+if(e.target===this){
+closeModal();
+}
+
+});
+
+categories();
+render();
+updateCount();
+
+</script>
+</body>
+</html>
