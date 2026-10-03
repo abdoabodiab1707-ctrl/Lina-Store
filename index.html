@@ -1016,6 +1016,7 @@ let phone=document.getElementById("orderPhone").value.trim();
 let city=document.getElementById("orderCity").value.trim();
 let address=document.getElementById("orderAddress").value.trim();
 let country=document.getElementById("orderCountry").value;
+let notes=document.getElementById("orderNotes").value.trim();
 
 if(!name||!phone||!city||!address){
 toast("من فضلك أكمل بيانات الطلب");
@@ -1030,7 +1031,7 @@ name:name,
 phone:phone,
 city:city,
 address:address,
-notes:document.getElementById("orderNotes").value.trim(),
+notes:notes,
 items:items(),
 total:subtotal()+COUNTRIES[state.country].ship,
 country:state.country,
@@ -1041,6 +1042,30 @@ localStorage.setItem(
 "linaLastOrder",
 JSON.stringify(order)
 );
+
+let message=`🛍️ طلب جديد من Lina Store
+
+📦 رقم الطلب: ${order.id}
+
+👤 الاسم: ${name}
+📱 هاتف العميل: ${phone}
+🌍 الدولة: ${COUNTRIES[country].name}
+🏙️ المدينة: ${city}
+📍 العنوان: ${address}
+
+📝 ملاحظات:
+${notes||"لا توجد"}
+
+💰 الإجمالي: ${order.total.toFixed(2)} ${COUNTRIES[country].symbol}
+
+🛒 المنتجات:
+${items().map(x=>`- ${x.name} × ${x.qty}`).join("\n")}
+`;
+
+let whatsappURL=
+"https://wa.me/201062200649?text="+encodeURIComponent(message);
+
+window.open(whatsappURL,"_blank");
 
 state.cart=[];
 
@@ -1055,7 +1080,7 @@ modal(`
 
 <div class="big">✅</div>
 
-<h2>تم استلام طلبك</h2>
+<h2>تم تجهيز طلبك</h2>
 
 <p>
 رقم الطلب:
@@ -1063,7 +1088,7 @@ modal(`
 </p>
 
 <p style="margin-top:8px">
-شكرًا لشرائك من Lina Store ❤️
+سيتم تحويلك إلى واتساب لإرسال الطلب.
 </p>
 
 <button class="btn primary"
