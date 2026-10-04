@@ -1040,11 +1040,14 @@ state.country=country;
 
 let countryInfo=COUNTRIES[country];
 let rate=RATE[countryInfo.currency];
+/* حساب الإجمالي النهائي */
+let subtotalLocal=Number(subtotal().toFixed(2));
+let shippingLocal=Number(countryInfo.ship.toFixed(2));
+let totalLocal=Number((subtotalLocal+shippingLocal).toFixed(2));
 
-/* حساب القيم بالدولار */
-let subtotalUSD=subtotal()/rate;
-let shippingUSD=countryInfo.ship/rate;
-let totalUSD=subtotalUSD+shippingUSD;
+let subtotalUSD=Number((subtotalLocal/rate).toFixed(2));
+let shippingUSD=Number((shippingLocal/rate).toFixed(2));
+let totalUSD=Number((totalLocal/rate).toFixed(2));
 
 /* بيانات الطلب */
 let order={
@@ -1055,7 +1058,7 @@ city:city,
 address:address,
 notes:notes,
 items:items(),
-total:subtotal()+countryInfo.ship,
+total:totalLocal,
 country:country,
 date:new Date().toLocaleString("ar-EG")
 };
