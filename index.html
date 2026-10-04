@@ -546,7 +546,7 @@ async function loadProductPrices(){
 
 const {data,error}=await supabaseClient
 .from("products")
-.select("id,price")
+.select("id,price,active")
 .order("id",{ascending:true});
 
 if(error){
@@ -565,6 +565,8 @@ p=>p.id===Number(dbProduct.id)
 if(product && dbProduct.price!==null){
 
 product.price=Number(dbProduct.price);
+
+product.active=dbProduct.active!==false;
 
 }
 
@@ -630,8 +632,7 @@ render();
 
 function filtered(){
 
-let arr=[...PRODUCTS];
-
+let arr=PRODUCTS.filter(x=>x.active!==false);
 if(state.category!=="الكل")
 arr=arr.filter(x=>x.category===state.category);
 
