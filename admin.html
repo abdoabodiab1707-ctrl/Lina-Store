@@ -728,7 +728,13 @@ onclick="editProduct(${Number(product.id)},${Number(product.price || 0)})">
 ✏️ تعديل السعر
 
 </button>
+<button
+class="${product.active ? "clear" : "refresh"}"
+onclick="toggleProduct(${Number(product.id)},${product.active})">
 
+${product.active ? "🔴 إيقاف المنتج" : "🟢 تشغيل المنتج"}
+
+</button>
 </div>
 </div>
 
@@ -776,7 +782,37 @@ async function editProduct(id,currentPrice){
 
   await loadProducts();
 }
+async function toggleProduct(id,currentStatus){
 
+const {error}=await supabaseClient
+.from("products")
+.update({
+active:!currentStatus
+})
+.eq("id",id);
+
+if(error){
+
+console.error(error);
+
+alert(
+"حدث خطأ أثناء تغيير حالة المنتج:\n" +
+error.message
+);
+
+return;
+
+}
+
+alert(
+currentStatus
+? "تم إيقاف المنتج 🔴"
+: "تم تشغيل المنتج 🟢"
+);
+
+await loadProducts();
+
+}
 async function loadOrders(){
 
 const ordersBox=
