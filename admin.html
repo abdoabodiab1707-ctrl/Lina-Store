@@ -590,6 +590,15 @@ onclick="loadOrders()">
 
 </div>
 
+<div style="margin-bottom:15px">
+<input
+id="searchOrders"
+type="text"
+placeholder="🔎 ابحث بالاسم أو رقم الطلب أو الهاتف..."
+oninput="filterOrders()"
+style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:16px"
+>
+</div>
 
 <div id="orders">
 
@@ -966,6 +975,27 @@ await loadOrders();
 
 }
 
+function filterOrders(){
+
+let input=document.getElementById("searchOrders");
+
+let query=input.value.toLowerCase().trim();
+
+let orderElements=document.querySelectorAll(".order");
+
+orderElements.forEach(order=>{
+
+let text=order.innerText.toLowerCase();
+
+if(text.includes(query)){
+order.style.display="";
+}else{
+order.style.display="none";
+}
+
+});
+
+}
 async function deleteOrder(id){
 
 if(!confirm(
