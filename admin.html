@@ -452,6 +452,8 @@ return;
 
 showDashboard();
 
+loadProducts();
+
 loadOrders();
 
 }
@@ -717,7 +719,17 @@ ${escapeHtml(product.cat || "-")}
 🏪 <strong>المورد:</strong>
 ${escapeHtml(product.supplier || "-")}
 </p>
+<div style="margin-top:15px">
 
+<button
+class="refresh"
+onclick="editProduct(${Number(product.id)},${Number(product.price || 0)})">
+
+✏️ تعديل السعر
+
+</button>
+
+</div>
 </div>
 
 `).join("");
