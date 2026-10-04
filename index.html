@@ -241,6 +241,19 @@ transform:translateY(20px);transition:.25s;pointer-events:none
 </style>
 </head>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://kuuknnnvukdcbmcgntby.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_Q5WB5WPKJsNSSHjl2Eg_tw_JRZfd_rW";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+
 <body>
 
 <header class="header">
@@ -1009,7 +1022,7 @@ onclick="submitOrder()">
 
 }
 
-function submitOrder(){
+async function submitOrder(){
 
 let name=document.getElementById("orderName").value.trim();
 let phone=document.getElementById("orderPhone").value.trim();
@@ -1038,6 +1051,53 @@ country:state.country,
 date:new Date().toLocaleString("ar-EG")
 };
 
+let countryInfo=COUNTRIES[country];
+
+let shippingUSD =
+countryInfo.ship / RATE[countryInfo.currency];
+
+let subtotalUSD =
+subtotal();
+
+let totalUSD =
+subtotalUSD + shippingUSD;
+
+let {error}=await supabaseClient
+.from("orders")
+.insert({
+order_number:order.id,
+status:"new",
+payment_method:"whatsapp",
+country:country,
+currency:countryInfo.currency,
+exchange_rate:RATE[countryInfo.currency],
+customer_name:name,
+customer_phone:phone,
+customer_email:"",
+shipping_address:address+" - "+city,
+subtotal_usd:subtotalUSD,
+shipping_usd:shippingUSD,
+total_usd:totalUSD
+});
+
+if(error){
+
+console.error(error);
+
+toast("حدث خطأ أثناء حفظ الطلب");
+
+return;
+}
+
+if(error){
+
+console.error(error);
+
+toast("حدث خطأ أثناء حفظ الطلب");
+
+return;
+}
+
 localStorage.setItem(
 "linaLastOrder",
 JSON.stringify(order)
@@ -1063,7 +1123,8 @@ ${items().map(x=>`- ${x.name} × ${x.qty}`).join("\n")}
 `;
 
 let whatsappURL=
-"https://wa.me/201062200649?text="+encodeURIComponent(message);
+"https://wa.me/201062200649?text="+
+encodeURIComponent(message);
 
 window.open(whatsappURL,"_blank");
 
@@ -1088,7 +1149,7 @@ modal(`
 </p>
 
 <p style="margin-top:8px">
-سيتم تحويلك إلى واتساب لإرسال الطلب.
+تم حفظ الطلب وسيتم تحويلك إلى واتساب لإرساله.
 </p>
 
 <button class="btn primary"
