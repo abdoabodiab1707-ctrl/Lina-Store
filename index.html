@@ -542,7 +542,40 @@ desc:"منظم عملي للمكتب."
 }
 
 ];
+async function loadProductPrices(){
 
+const {data,error}=await supabaseClient
+.from("products")
+.select("id,price")
+.order("id",{ascending:true});
+
+if(error){
+console.error("Supabase products error:",error);
+return;
+}
+
+if(data){
+
+data.forEach(dbProduct=>{
+
+const product=PRODUCTS.find(
+p=>p.id===Number(dbProduct.id)
+);
+
+if(product && dbProduct.price!==null){
+
+product.price=Number(dbProduct.price);
+
+}
+
+});
+
+}
+
+categories();
+render();
+
+}
 const COUNTRIES={
 USA:{name:"🇺🇸 الولايات المتحدة",currency:"USD",symbol:"$",ship:8},
 KWT:{name:"🇰🇼 الكويت",currency:"KWD",symbol:"د.ك",ship:2.5},
