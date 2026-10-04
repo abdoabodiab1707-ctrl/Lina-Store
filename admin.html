@@ -735,6 +735,48 @@ onclick="editProduct(${Number(product.id)},${Number(product.price || 0)})">
 `).join("");
 
 }
+async function editProduct(id,currentPrice){
+
+  const newPrice = prompt(
+    "اكتب السعر الجديد بالدولار:",
+    Number(currentPrice || 0).toFixed(2)
+  );
+
+  if(newPrice === null){
+    return;
+  }
+
+  const price = Number(newPrice);
+
+  if(!Number.isFinite(price) || price < 0){
+    alert("من فضلك اكتب سعرًا صحيحًا.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("products")
+    .update({
+      price: price
+    })
+    .eq("id", id);
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "حدث خطأ أثناء تعديل السعر:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  alert("تم تعديل السعر بنجاح ✅");
+
+  await loadProducts();
+}
+
 async function loadOrders(){
 
 const ordersBox=
