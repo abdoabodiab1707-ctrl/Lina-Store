@@ -82,6 +82,7 @@ margin:0 0 8px;
 .row{
 display:flex;
 justify-content:space-between;
+align-items:center;
 gap:10px;
 flex-wrap:wrap;
 }
@@ -89,6 +90,14 @@ flex-wrap:wrap;
 .badge{
 background:#fff0f6;
 color:#d63384;
+padding:5px 10px;
+border-radius:20px;
+font-size:13px;
+}
+
+.status{
+background:#fff7ed;
+color:#c2410c;
 padding:5px 10px;
 border-radius:20px;
 font-size:13px;
@@ -112,10 +121,54 @@ background:#ef4444;
 color:white;
 }
 
+.logout{
+background:#ef4444;
+color:white;
+}
+
+.loginBox{
+max-width:450px;
+margin:50px auto;
+}
+
+input{
+width:100%;
+padding:13px;
+border:1px solid #ddd;
+border-radius:10px;
+margin-top:7px;
+margin-bottom:15px;
+font-size:16px;
+}
+
+.loginBtn{
+width:100%;
+background:#ec4899;
+color:white;
+font-size:16px;
+padding:13px;
+}
+
 .empty{
 text-align:center;
 padding:30px;
 color:#777;
+}
+
+.error{
+background:#fee2e2;
+color:#b91c1c;
+padding:12px;
+border-radius:10px;
+margin-bottom:15px;
+}
+
+.success{
+background:#dcfce7;
+color:#166534;
+padding:12px;
+border-radius:10px;
+margin-bottom:15px;
 }
 
 @media(max-width:700px){
@@ -140,6 +193,10 @@ padding:12px;
 
 <div class="container">
 
+<div class="row">
+
+<div>
+
 <h1>🛍️ Lina Store — لوحة التحكم</h1>
 
 <p style="margin-bottom:0">
@@ -148,56 +205,58 @@ padding:12px;
 
 </div>
 
+<div id="headerButton"></div>
+
+</div>
+
+</div>
+
 </header>
+
 
 <main class="container">
 
-<div class="stats">
+<div id="app">
 
-<div class="stat">
-📦 الطلبات
-<strong id="ordersCount">0</strong>
-</div>
+<div class="card loginBox">
 
-<div class="stat">
-💰 آخر إجمالي
-<strong id="lastTotal">0</strong>
-</div>
+<h2>🔐 دخول لوحة الإدارة</h2>
 
-<div class="stat">
-🌍 الدولة
-<strong id="lastCountry">-</strong>
-</div>
+<p>
+من فضلك سجل الدخول بحساب الأدمن.
+</p>
 
-</div>
+<div id="loginMessage"></div>
 
-<div class="card">
+<label>
+البريد الإلكتروني
+</label>
 
-<div class="row">
+<input
+id="email"
+type="email"
+placeholder="البريد الإلكتروني"
+autocomplete="email"
+>
 
-<h2>📋 آخر طلب</h2>
+<label>
+كلمة المرور
+</label>
 
-<div>
+<input
+id="password"
+type="password"
+placeholder="كلمة المرور"
+autocomplete="current-password"
+>
 
-<button class="refresh"
-onclick="loadOrder()">
-🔄 تحديث
+<button
+class="loginBtn"
+onclick="loginAdmin()">
+
+تسجيل الدخول
+
 </button>
-
-<button class="clear"
-onclick="clearOrder()">
-حذف
-</button>
-
-</div>
-
-</div>
-
-<div id="orders">
-
-<div class="empty">
-لا توجد طلبات محفوظة على هذا الجهاز.
-</div>
 
 </div>
 
@@ -205,7 +264,26 @@ onclick="clearOrder()">
 
 </main>
 
+
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
 <script>
+
+const SUPABASE_URL =
+"https://kuuknnnvukdcbmcgntby.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_Q5WB5WPKJsNSSHj12Eg_tw_JRZfd_rW";
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
 
 const COUNTRIES={
 
@@ -236,108 +314,574 @@ symbol:"ج.م"
 
 };
 
-function loadOrder(){
 
-let data=localStorage.getItem("linaLastOrder");
+function escapeHtml(value){
 
-if(!data){
+return String(value ?? "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
-document.getElementById("orders").innerHTML=`
-<div class="empty">
-لا يوجد طلب محفوظ.
+}
+
+
+async function loginAdmin(){
+
+const email=
+document.getElementById("email").value.trim();
+
+const password=
+document.getElementById("password").value;
+
+const message=
+document.getElementById("loginMessage");
+
+if(!email || !password){
+
+message.innerHTML=`
+<div class="error">
+من فضلك اكتب البريد الإلكتروني وكلمة المرور.
 </div>
 `;
-
-document.getElementById("ordersCount").textContent="0";
-document.getElementById("lastTotal").textContent="0";
-document.getElementById("lastCountry").textContent="-";
 
 return;
 
 }
 
-let order=JSON.parse(data);
 
-document.getElementById("ordersCount").textContent="1";
+message.innerHTML=`
+<div class="success">
+جاري تسجيل الدخول...
+</div>
+`;
 
-document.getElementById("lastTotal").textContent=
-order.total+" "+
-(COUNTRIES[order.country]?.symbol||"");
 
-document.getElementById("lastCountry").textContent=
-COUNTRIES[order.country]?.name||order.country;
+const {data,error}=
+await supabaseClient.auth.signInWithPassword({
+email:email,
+password:password
+});
 
-let products="";
 
-if(order.items){
+if(error){
 
-products=order.items.map(x=>`
-<li>
-${x.name} × ${x.qty}
-</li>
-`).join("");
+message.innerHTML=`
+<div class="error">
+فشل تسجيل الدخول:
+${escapeHtml(error.message)}
+</div>
+`;
+
+return;
 
 }
 
-document.getElementById("orders").innerHTML=`
+
+await checkAdmin();
+
+}
+
+
+async function checkAdmin(){
+
+const {
+data:{
+user
+}
+}=await supabaseClient.auth.getUser();
+
+
+if(!user){
+
+showLogin();
+
+return;
+
+}
+
+
+const {
+data:profile,
+error
+}=await supabaseClient
+.from("profiles")
+.select("role")
+.eq("id",user.id)
+.maybeSingle();
+
+
+if(error){
+
+console.error(error);
+
+await supabaseClient.auth.signOut();
+
+showLogin("حدث خطأ أثناء التحقق من صلاحيات الأدمن.");
+
+return;
+
+}
+
+
+if(!profile || profile.role!=="admin"){
+
+await supabaseClient.auth.signOut();
+
+showLogin("هذا الحساب ليس لديه صلاحية الأدمن.");
+
+return;
+
+}
+
+
+showDashboard();
+
+loadOrders();
+
+}
+
+
+function showLogin(message=""){
+
+document.getElementById("headerButton").innerHTML="";
+
+document.getElementById("app").innerHTML=`
+
+<div class="card loginBox">
+
+<h2>🔐 دخول لوحة الإدارة</h2>
+
+<p>
+من فضلك سجل الدخول بحساب الأدمن.
+</p>
+
+<div id="loginMessage">
+
+${message ? `
+<div class="error">
+${escapeHtml(message)}
+</div>
+` : ""}
+
+</div>
+
+<label>
+البريد الإلكتروني
+</label>
+
+<input
+id="email"
+type="email"
+placeholder="البريد الإلكتروني"
+autocomplete="email"
+>
+
+<label>
+كلمة المرور
+</label>
+
+<input
+id="password"
+type="password"
+placeholder="كلمة المرور"
+autocomplete="current-password"
+>
+
+<button
+class="loginBtn"
+onclick="loginAdmin()">
+
+تسجيل الدخول
+
+</button>
+
+</div>
+
+`;
+
+}
+
+
+function showDashboard(){
+
+document.getElementById("headerButton").innerHTML=`
+
+<button
+class="logout"
+onclick="logoutAdmin()">
+
+🚪 تسجيل الخروج
+
+</button>
+
+`;
+
+
+document.getElementById("app").innerHTML=`
+
+<div class="stats">
+
+<div class="stat">
+
+📦 الطلبات
+
+<strong id="ordersCount">
+0
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+💰 آخر إجمالي بالدولار
+
+<strong id="lastTotal">
+0 $
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+🌍 آخر دولة
+
+<strong id="lastCountry">
+-
+</strong>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="row">
+
+<h2>
+📋 الطلبات
+</h2>
+
+<button
+class="refresh"
+onclick="loadOrders()">
+
+🔄 تحديث
+
+</button>
+
+</div>
+
+
+<div id="orders">
+
+<div class="empty">
+جاري تحميل الطلبات...
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+async function loadOrders(){
+
+const ordersBox=
+document.getElementById("orders");
+
+
+if(!ordersBox){
+return;
+}
+
+
+ordersBox.innerHTML=`
+
+<div class="empty">
+جاري تحميل الطلبات...
+</div>
+
+`;
+
+
+const {
+data:orders,
+error
+}=await supabaseClient
+.from("orders")
+.select("*")
+.order("created_at",{ascending:false});
+
+
+if(error){
+
+console.error(error);
+
+ordersBox.innerHTML=`
+
+<div class="error">
+حدث خطأ أثناء تحميل الطلبات.
+<br>
+${escapeHtml(error.message)}
+</div>
+
+`;
+
+return;
+
+}
+
+
+document.getElementById("ordersCount")
+.textContent=orders.length;
+
+
+if(orders.length===0){
+
+document.getElementById("lastTotal")
+.textContent="0 $";
+
+document.getElementById("lastCountry")
+.textContent="-";
+
+
+ordersBox.innerHTML=`
+
+<div class="empty">
+
+📭 لا توجد طلبات حتى الآن.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+const last=orders[0];
+
+
+document.getElementById("lastTotal")
+.textContent=
+Number(last.total_usd || 0).toFixed(2)+" $";
+
+
+document.getElementById("lastCountry")
+.textContent=
+COUNTRIES[last.country]?.name ||
+last.country ||
+"-";
+
+
+ordersBox.innerHTML=
+orders.map(renderOrder).join("");
+
+}
+
+
+function renderOrder(order){
+
+const date=
+order.created_at
+?
+new Date(order.created_at)
+.toLocaleString("ar-EG")
+:
+"—";
+
+
+const country=
+COUNTRIES[order.country] ||
+{
+name:order.country || "-",
+symbol:""
+};
+
+
+const status=
+order.status || "pending";
+
+
+return `
 
 <div class="order">
 
 <div class="row">
 
 <h3>
-📦 ${order.id}
+
+📦
+
+${escapeHtml(
+order.order_number || "بدون رقم"
+)}
+
 </h3>
 
+
+<div>
+
 <span class="badge">
-${order.date}
+
+${escapeHtml(date)}
+
+</span>
+
+<span class="status">
+
+${escapeHtml(status)}
+
 </span>
 
 </div>
 
-<p>
-👤 <strong>الاسم:</strong>
-${order.name}
-</p>
+</div>
+
 
 <p>
-📱 <strong>الهاتف:</strong>
-${order.phone}
+
+👤
+
+<strong>
+الاسم:
+</strong>
+
+${escapeHtml(
+order.customer_name
+)}
+
 </p>
+
 
 <p>
-🌍 <strong>الدولة:</strong>
-${COUNTRIES[order.country]?.name||order.country}
+
+📱
+
+<strong>
+الهاتف:
+</strong>
+
+${escapeHtml(
+order.customer_phone
+)}
+
 </p>
+
 
 <p>
-🏙️ <strong>المدينة:</strong>
-${order.city}
+
+📧
+
+<strong>
+البريد:
+</strong>
+
+${escapeHtml(
+order.customer_email || "غير موجود"
+)}
+
 </p>
+
 
 <p>
-📍 <strong>العنوان:</strong>
-${order.address}
+
+🌍
+
+<strong>
+الدولة:
+</strong>
+
+${escapeHtml(
+country.name
+)}
+
 </p>
+
 
 <p>
-📝 <strong>ملاحظات:</strong>
-${order.notes||"لا توجد"}
+
+📍
+
+<strong>
+العنوان:
+</strong>
+
+${escapeHtml(
+order.shipping_address
+)}
+
 </p>
+
 
 <p>
-🛒 <strong>المنتجات:</strong>
+
+💵
+
+<strong>
+العملة:
+</strong>
+
+${escapeHtml(
+order.currency
+)}
+
 </p>
 
-<ul>
-${products}
-</ul>
 
 <p>
-💰 <strong>الإجمالي:</strong>
-${order.total}
-${COUNTRIES[order.country]?.symbol||""}
+
+💰
+
+<strong>
+الإجمالي بالدولار:
+</strong>
+
+${Number(
+order.total_usd || 0
+).toFixed(2)}
+
+$
+
 </p>
+
+
+<p>
+
+🧾
+
+<strong>
+رقم قاعدة البيانات:
+</strong>
+
+${escapeHtml(
+order.id
+)}
+
+</p>
+
+
+<div style="margin-top:15px">
+
+<button
+class="clear"
+onclick="deleteOrder(${Number(order.id)})">
+
+🗑️ حذف الطلب
+
+</button>
+
+</div>
+
 
 </div>
 
@@ -345,19 +889,75 @@ ${COUNTRIES[order.country]?.symbol||""}
 
 }
 
-function clearOrder(){
 
-if(!confirm("هل تريد حذف الطلب المحفوظ؟")){
+async function deleteOrder(id){
+
+if(!confirm(
+"هل أنت متأكد من حذف هذا الطلب؟"
+)){
+
 return;
-}
-
-localStorage.removeItem("linaLastOrder");
-
-loadOrder();
 
 }
 
-loadOrder();
+
+const {
+error
+}=await supabaseClient
+.from("orders")
+.delete()
+.eq("id",id);
+
+
+if(error){
+
+alert(
+"حدث خطأ أثناء حذف الطلب: "+
+error.message
+);
+
+return;
+
+}
+
+
+await loadOrders();
+
+}
+
+
+async function logoutAdmin(){
+
+await supabaseClient.auth.signOut();
+
+showLogin();
+
+}
+
+
+async function startAdmin(){
+
+const {
+data:{
+session
+}
+}=await supabaseClient.auth.getSession();
+
+
+if(session){
+
+await checkAdmin();
+
+}else{
+
+showLogin();
+
+}
+
+}
+
+
+startAdmin();
 
 </script>
 
