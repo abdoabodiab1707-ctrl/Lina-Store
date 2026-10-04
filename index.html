@@ -1038,6 +1038,15 @@ return;
 
 state.country=country;
 
+let countryInfo=COUNTRIES[country];
+let rate=RATE[countryInfo.currency];
+
+/* حساب القيم بالدولار */
+let subtotalUSD=subtotal()/rate;
+let shippingUSD=countryInfo.ship/rate;
+let totalUSD=subtotalUSD+shippingUSD;
+
+/* بيانات الطلب */
 let order={
 id:"LIN-"+Date.now(),
 name:name,
@@ -1046,31 +1055,19 @@ city:city,
 address:address,
 notes:notes,
 items:items(),
-total:subtotal()+COUNTRIES[state.country].ship,
-country:state.country,
+total:subtotal()+countryInfo.ship,
+country:country,
 date:new Date().toLocaleString("ar-EG")
 };
 
-let countryInfo=COUNTRIES[country];
-
-let shippingUSD =
-countryInfo.ship / RATE[countryInfo.currency];
-
-let subtotalUSD =
-subtotal();
-
-let totalUSD =
-subtotalUSD + shippingUSD;
-
+/* حفظ الطلب في Supabase */
 let {error}=await supabaseClient
 .from("orders")
 .insert({
 order_number:order.id,
-status:"new",
-payment_method:"whatsapp",
 country:country,
 currency:countryInfo.currency,
-exchange_rate:RATE[countryInfo.currency],
+exchange_rate:rate,
 customer_name:name,
 customer_phone:phone,
 customer_email:"",
@@ -1081,28 +1078,18 @@ total_usd:totalUSD
 });
 
 if(error){
-
-console.error(error);
-
+console.error("Supabase order error:",error);
 toast("حدث خطأ أثناء حفظ الطلب");
-
 return;
 }
 
-if(error){
-
-console.error(error);
-
-toast("حدث خطأ أثناء حفظ الطلب");
-
-return;
-}
-
+/* حفظ آخر طلب على الجهاز */
 localStorage.setItem(
 "linaLastOrder",
 JSON.stringify(order)
 );
 
+/* رسالة واتساب */
 let message=`🛍️ طلب جديد من Lina Store
 
 📦 رقم الطلب: ${order.id}
@@ -1128,13 +1115,13 @@ encodeURIComponent(message);
 
 window.open(whatsappURL,"_blank");
 
+/* تفريغ السلة */
 state.cart=[];
-
 save();
 updateCount();
 
+/* رسالة نجاح */
 modal(`
-
 <button class="close" onclick="closeModal()">×</button>
 
 <div class="empty">
@@ -1159,7 +1146,6 @@ onclick="closeModal()">
 </button>
 
 </div>
-
 `);
 
 }
