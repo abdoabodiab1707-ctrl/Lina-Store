@@ -562,9 +562,13 @@ const product=PRODUCTS.find(
 p=>p.id===Number(dbProduct.id)
 );
 
-if(product && dbProduct.price!==null){
+if(product){
+
+if(dbProduct.price!==null){
 
 product.price=Number(dbProduct.price);
+
+}
 
 product.active=dbProduct.active!==false;
 
