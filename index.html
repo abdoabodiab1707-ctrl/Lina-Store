@@ -150,7 +150,7 @@ img { max-width: 100%; display: block; }
 }
 
 .current-price {
-  font-size: 32px;
+  font-size: 34px;
   font-weight: 900;
   color: var(--pink-dark);
 }
@@ -164,9 +164,9 @@ img { max-width: 100%; display: block; }
 .discount-badge {
   background: #16a34a;
   color: white;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
 }
 
@@ -176,7 +176,6 @@ img { max-width: 100%; display: block; }
   padding: 20px;
   box-shadow: var(--shadow);
   text-align: center;
-  position: relative;
 }
 
 .main-img {
@@ -250,6 +249,27 @@ img { max-width: 100%; display: block; }
 }
 
 .whatsapp:hover { background: #1eb956; }
+
+/* عناصر الثقة والأمان المحدثة */
+.trust-badges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 30px 0;
+}
+
+.trust-item {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.trust-item .icon { font-size: 28px; margin-bottom: 5px; }
+.trust-item h4 { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+.trust-item p { font-size: 12px; color: var(--muted); margin: 0; }
 
 .features-grid {
   display: grid;
@@ -358,6 +378,7 @@ img { max-width: 100%; display: block; }
 @media(max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; }
   .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .trust-badges { grid-template-columns: 1fr; }
 }
 
 @media(max-width: 600px) {
@@ -384,7 +405,7 @@ img { max-width: 100%; display: block; }
 <section class="hero">
   <div class="hero-inner">
     <div>
-      <div class="badge">🔥 الأكثر طلباً في السعودية 🇸🇦</div>
+      <div class="badge">🔥 عرض خاص وشحن سريع للسعودية 🇸🇦</div>
 
       <h1>
         الخاتم الذكي
@@ -396,9 +417,9 @@ img { max-width: 100%; display: block; }
       </p>
 
       <div class="price-tag">
-        <span class="current-price">199 ر.س</span>
+        <span class="current-price">169 ر.س</span>
         <span class="old-price">299 ر.س</span>
-        <span class="discount-badge">خصم 33%</span>
+        <span class="discount-badge">وفّر 130 ر.س</span>
       </div>
 
       <div class="size-selector">
@@ -423,7 +444,7 @@ img { max-width: 100%; display: block; }
     <div class="hero-image-box">
       <img
         class="main-img"
-        src="https://m.media-amazon.com/images/I/61k1A186iGL._AC_SL1000_.jpg"
+        src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop"
         alt="الخاتم الذكي DENX DX910"
       >
     </div>
@@ -431,6 +452,27 @@ img { max-width: 100%; display: block; }
 </section>
 
 <main class="container">
+
+  <!-- قسم عناصر الثقة والأمان المطور -->
+  <section class="trust-badges">
+    <div class="trust-item">
+      <div class="icon">🚚</div>
+      <h4>شحن سريع ومباشر</h4>
+      <p>توصيل لجميع مناطق مدن المملكة العربية السعودية</p>
+    </div>
+
+    <div class="trust-item">
+      <div class="icon">🛡️</div>
+      <h4>ضمان جودة وصيانة</h4>
+      <p>منتج أصلـي 100% مع ضمان استبدال ضد عيوب التصنيع</p>
+    </div>
+
+    <div class="trust-item">
+      <div class="icon">💳</div>
+      <h4>دفع آمن وسهل</h4>
+      <p>خيارات دفع متعددة والدفع عند الاستلام عبر الواتساب</p>
+    </div>
+  </section>
 
   <!-- مميزات الخاتم -->
   <section class="features-grid">
@@ -502,7 +544,7 @@ img { max-width: 100%; display: block; }
     <div>
       <h3>الدعم وخدمة العملاء</h3>
       <p>توصيل سريع لكافة مدن المملكة</p>
-      <p>دفع آمن 100% عند الاستلام و Apple Pay</p>
+      <p>خدمة عملاء متوفرة عبر الواتساب</p>
     </div>
   </div>
 
@@ -549,8 +591,11 @@ function checkout() {
 }
 
 function orderViaWhatsApp() {
-  const phoneNumber = "+201062200649"; // يمكنك استبدال هذا الرقم برقم واتساب متجرك
-  const message = encodeURIComponent(`أهلاً متجر لينا 👋، أرغب بطلب الخاتم الذكي DENX DX910\nالمقاس: ${selectedSize}\nالعدد: ${cartCount || 1}\nإجمالي السعر: ${(cartCount || 1) * 199} ر.س`);
+  const phoneNumber = "201062200649";
+  const count = cartCount || 1;
+  const totalPrice = count * 169;
+  const message = encodeURIComponent(`أهلاً متجر لينا 👋، أرغب بطلب الخاتم الذكي DENX DX910\nالمقاس المطلوب: ${selectedSize}\nالكمية: ${count}\nإجمالي السعر: ${totalPrice} ر.س`);
+  
   window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
 }
 </script>
