@@ -180,9 +180,33 @@ img { max-width: 100%; display: block; }
 
 .main-img {
   width: 100%;
-  max-height: 420px;
+  max-height: 400px;
   object-fit: contain;
   border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+/* تنسيق معرض الصور المصغرة */
+.gallery-thumbs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.thumb-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.thumb-img.active, .thumb-img:hover {
+  border-color: var(--pink);
+  transform: scale(1.05);
 }
 
 .size-selector {
@@ -440,12 +464,29 @@ img { max-width: 100%; display: block; }
       </div>
     </div>
 
+    <!-- قسم معرض الصور التفاعلي -->
     <div class="hero-image-box">
       <img
+        id="mainProductImg"
         class="main-img"
-        src="https://i.ibb.co/6P0J9Xp/denx-dx910.jpg"
+        src="https://storage.googleapis.com/cosmic-tenure-290110-media/variants_images/b46350ed-11a.jpg"
         alt="الخاتم الذكي DENX DX910"
       >
+
+      <div class="gallery-thumbs">
+        <img
+          class="thumb-img active"
+          src="https://storage.googleapis.com/cosmic-tenure-290110-media/variants_images/b46350ed-11a.jpg"
+          onclick="changeImage(this, this.src)"
+          alt="صورة المنتج 1"
+        >
+        <img
+          class="thumb-img"
+          src="https://m.media-amazon.com/images/I/61k1A186iGL._AC_SL1000_.jpg"
+          onclick="changeImage(this, this.src)"
+          alt="صورة المنتج 2"
+        >
+      </div>
     </div>
   </div>
 </section>
@@ -554,6 +595,12 @@ img { max-width: 100%; display: block; }
 <script>
 let selectedSize = "19.9 mm";
 let cartCount = 0;
+
+function changeImage(element, src) {
+  document.getElementById('mainProductImg').src = src;
+  document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
+  element.classList.add('active');
+}
 
 function selectSize(btn, size) {
   document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
