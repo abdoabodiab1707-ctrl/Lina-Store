@@ -549,7 +549,7 @@ function checkout() {
 }
 
 function orderViaWhatsApp() {
-  const phoneNumber = "01062200649"; // يمكنك استبدال هذا الرقم برقم واتساب متجرك
+  const phoneNumber = "+201062200649"; // يمكنك استبدال هذا الرقم برقم واتساب متجرك
   const message = encodeURIComponent(`أهلاً متجر لينا 👋، أرغب بطلب الخاتم الذكي DENX DX910\nالمقاس: ${selectedSize}\nالعدد: ${cartCount || 1}\nإجمالي السعر: ${(cartCount || 1) * 199} ر.س`);
   window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
 }
