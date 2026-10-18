@@ -357,6 +357,119 @@ img { max-width: 100%; display: block; }
   width: 35%;
 }
 
+/* نافذة إتمام الطلب (Checkout Modal) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  backdrop-filter: blur(5px);
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 22px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #f3f4f6;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content h3 {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 8px;
+  color: var(--dark);
+}
+
+.modal-content p.modal-sub {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: right;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--dark);
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 15px;
+  background: #fafafa;
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--pink);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(244, 91, 122, 0.15);
+}
+
+.modal-submit-btn {
+  width: 100%;
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 900;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.modal-submit-btn:hover {
+  background: #1eb956;
+}
+
 .footer {
   background: #0b1120;
   color: white;
@@ -417,7 +530,7 @@ img { max-width: 100%; display: block; }
   <nav class="nav">
     <a href="#" class="logo">Lina <span>Store</span></a>
 
-    <button class="cart-btn-nav" onclick="checkout()">
+    <button class="cart-btn-nav" onclick="openCheckoutModal()">
       <span>🛒 السلة</span>
       <span class="cart-count" id="cartCount">0</span>
     </button>
@@ -454,16 +567,15 @@ img { max-width: 100%; display: block; }
       </div>
 
       <div class="action-buttons">
-        <button class="btn primary" onclick="addToCart()">
+        <button class="btn primary" onclick="addToCartAndCheckout()">
           أضف إلى السلة 🛒
         </button>
-        <button class="btn whatsapp" onclick="orderViaWhatsApp()">
+        <button class="btn whatsapp" onclick="openCheckoutModal()">
           اطلب عبر واتساب 💬
         </button>
       </div>
     </div>
 
-    <!-- معرض الصور المحدث للعمل بالصورتين -->
     <div class="hero-image-box">
       <img
         id="mainProductImg"
@@ -489,6 +601,46 @@ img { max-width: 100%; display: block; }
     </div>
   </div>
 </section>
+
+<!-- نافذة إتمام الطلب وتجميع البيانات -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeCheckoutModal()">×</button>
+    <h3>إتمام طلب الشراء 📦</h3>
+    <p class="modal-sub">أدخل بيانات التوصيل الخاصة بك لنرسل طلبك مباشرة عبر الواتساب</p>
+
+    <form onsubmit="submitOrder(event)">
+      <div class="form-group">
+        <label>الاسم الكامل:</label>
+        <input type="text" id="custName" class="form-control" placeholder="مثال: خالد عبد العزيز" required>
+      </div>
+
+      <div class="form-group">
+        <label>رقم الجوال (السعودي):</label>
+        <input type="tel" id="custPhone" class="form-control" placeholder="مثال: 0501234567" required>
+      </div>
+
+      <div class="form-group">
+        <label>المدينة / المنطقة:</label>
+        <input type="text" id="custCity" class="form-control" placeholder="مثال: الرياض، جدة، الدمام..." required>
+      </div>
+
+      <div class="form-group">
+        <label>العنوان التفصيلي:</label>
+        <input type="text" id="custAddress" class="form-control" placeholder="اسم الحي، الشارع، رقم المبنى" required>
+      </div>
+
+      <div class="form-group">
+        <label>ملاحظات إضافية (اختياري):</label>
+        <textarea id="custNotes" class="form-control" rows="2" placeholder="أي تفاصيل خاصة بوقت التوصيل"></textarea>
+      </div>
+
+      <button type="submit" class="modal-submit-btn">
+        <span>تأكيد وإرسال الطلب عبر الواتساب</span> 💬
+      </button>
+    </form>
+  </div>
+</div>
 
 <main class="container">
 
@@ -618,27 +770,49 @@ function showToast(message) {
   }, 2500);
 }
 
-function addToCart() {
-  cartCount++;
+function addToCartAndCheckout() {
+  cartCount = 1;
   document.getElementById("cartCount").textContent = cartCount;
-  showToast(`تم إضافة الخاتم بمقاس (${selectedSize}) إلى السلة بنجاح 🛍️`);
+  openCheckoutModal();
 }
 
-function checkout() {
-  if (cartCount === 0) {
-    showToast("السلة فارغة حالياً! أضف المنتج أولاً.");
-  } else {
-    orderViaWhatsApp();
-  }
+function openCheckoutModal() {
+  document.getElementById("checkoutModal").classList.add("active");
 }
 
-function orderViaWhatsApp() {
-  const phoneNumber = "201062200649";
+function closeCheckoutModal() {
+  document.getElementById("checkoutModal").classList.remove("active");
+}
+
+function submitOrder(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("custName").value;
+  const phone = document.getElementById("custPhone").value;
+  const city = document.getElementById("custCity").value;
+  const address = document.getElementById("custAddress").value;
+  const notes = document.getElementById("custNotes").value || "لا توجد ملاحظات";
+
   const count = cartCount || 1;
   const totalPrice = count * 169;
-  const message = encodeURIComponent(`أهلاً متجر لينا 👋، أرغب بطلب الخاتم الذكي DENX DX910\nالمقاس المطلوب: ${selectedSize}\nالكمية: ${count}\nإجمالي السعر: ${totalPrice} ر.س`);
-  
+  const phoneNumber = "201062200649";
+
+  const message = encodeURIComponent(
+    `🛒 *طلب جديد من متجر لينا (السعودية)*\n\n` +
+    `📦 *المنتج:* الخاتم الذكي DENX DX910\n` +
+    `📏 *المقاس:* ${selectedSize}\n` +
+    `🔢 *الكمية:* ${count}\n` +
+    `💰 *الإجمالي:* ${totalPrice} ر.س\n\n` +
+    `👤 *بيانات العميل والشحن:*\n` +
+    `- الاسم: ${name}\n` +
+    `- الجوال: ${phone}\n` +
+    `- المدينة: ${city}\n` +
+    `- العنوان: ${address}\n` +
+    `- ملاحظات: ${notes}`
+  );
+
   window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  closeCheckoutModal();
 }
 </script>
 
